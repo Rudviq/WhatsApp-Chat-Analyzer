@@ -1,0 +1,3958 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+    \usepackage{iftex}
+    \ifPDFTeX
+    	\usepackage[T1]{fontenc}
+    	\usepackage{mathpazo}
+    \else
+    	\usepackage{fontspec}
+    \fi
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{WhatsappChatAnalyzer\_Final}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    Whatsapp Chat Analyzer
+Created by: Rudviq Bhavsar
+Date: 21th June 2021
+    \section{Things to be analyzed}\label{things-to-be-analyzed}
+
+    Contact-wise statistics:
+
+Number of messages per contact
+
+Number of words per contact
+
+Number of average words per message per contact
+
+Number of emojis per contact
+
+Number of emojis per contact
+
+NUmber of media per contact
+
+NUmber of keywords per contact
+
+    TIme-wise statistics:
+
+Number of messages per hour
+
+Number of messages per weekday
+
+Number of messages per month
+
+Number of messages per year
+
+    \begin{verbatim}
+<body>
+    <hr size="30" noshade>
+</body>
+\end{verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}Importing Libraries}
+
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+
+
+\PY{o}{\PYZpc{}}\PY{k}{config} IPCompleter.use\PYZus{}jedi = False
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}Getting the dataset for processing it}
+
+\PY{n}{df}\PY{o}{=}\PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Dataset/WhatsApp\PYZhy{}Chat\PYZhy{}with\PYZhy{}परम्परा\PYZhy{}प्रतिष्ठा\PYZhy{}अनुशासन.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{df}\PY{o}{.}\PY{n}{columns} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Column}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{c+c1}{\PYZsh{} df}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsection{Spliting the text in the csv file into different
+columns}\label{spliting-the-text-in-the-csv-file-into-different-columns}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}1 Splitting Date and rest of the columns}
+
+\PY{n}{split\PYZus{}col}\PY{o}{=}\PY{n}{df}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{, }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{expand}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Date}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{=}\PY{n}{split\PYZus{}col}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+\PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Temp\PYZus{}col}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{=} \PY{n}{split\PYZus{}col}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+
+\PY{c+c1}{\PYZsh{}OR}
+\PY{c+c1}{\PYZsh{}df.columns = [\PYZsq{}Date\PYZsq{},\PYZsq{}Temp\PYZus{}col\PYZsq{}]}
+
+\PY{n}{df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Column}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}\PY{n}{inplace} \PY{o}{=} \PY{k+kc}{True}\PY{p}{)}
+
+
+\PY{c+c1}{\PYZsh{}2 Splitting Time and the other column}
+
+\PY{n}{split\PYZus{}col} \PY{o}{=}\PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Temp\PYZus{}col}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ \PYZhy{} }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{expand}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Time}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{=} \PY{n}{split\PYZus{}col}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+\PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Temp\PYZus{}col}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{=}\PY{n}{split\PYZus{}col}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+
+\PY{c+c1}{\PYZsh{}3 Splitting user and chats columns}
+\PY{n}{split\PYZus{}col} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Temp\PYZus{}col}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{expand} \PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Users}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{=} \PY{n}{split\PYZus{}col}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+\PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Whatsapp Chats}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{=}\PY{n}{split\PYZus{}col}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+
+
+\PY{n}{df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Temp\PYZus{}col}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,}\PY{n}{inplace}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \section{Function to plot bar graph}\label{function-to-plot-bar-graph}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{plotGraph}\PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{n}{y}\PY{p}{,}\PY{n}{title}\PY{p}{)}\PY{p}{:}
+\PY{c+c1}{\PYZsh{}     fig,ax = plt.subplots()}
+
+
+\PY{c+c1}{\PYZsh{}     y\PYZus{}pos = np.arange(len(x))}
+   
+\PY{c+c1}{\PYZsh{}     ax.barh(y\PYZus{}pos,y,align = \PYZsq{}center\PYZsq{})}
+\PY{c+c1}{\PYZsh{}     ax.set\PYZus{}yticks(y\PYZus{}pos)}
+\PY{c+c1}{\PYZsh{}     ax.set\PYZus{}yticklabels(x)}
+\PY{c+c1}{\PYZsh{}     \PYZsh{} ax.set\PYZus{}xticks(y)}
+\PY{c+c1}{\PYZsh{}     ax.set\PYZus{}title(title)}
+\PY{c+c1}{\PYZsh{}     ax.invert\PYZus{}yaxis()}
+
+    \PY{n}{fig}\PY{p}{,}\PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
+    \PY{n}{y}\PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{y}\PY{p}{)}
+    \PY{n}{chk\PYZus{}index}\PY{o}{=} \PY{n}{y}\PY{p}{[}\PY{n}{y}\PY{o}{.}\PY{n}{argsort}\PY{p}{(}\PY{p}{)}\PY{p}{]}\PY{p}{[}\PY{p}{:}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+
+
+    \PY{n}{pips}\PY{o}{=}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{n+nb}{len}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+        \PY{n}{pips}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{n}{x}\PY{p}{[}\PY{n}{y}\PY{o}{.}\PY{n}{argsort}\PY{p}{(}\PY{p}{)}\PY{p}{[}\PY{p}{:}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{]} 
+
+    \PY{n}{y\PYZus{}pos} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{)}
+
+    \PY{n}{ax}\PY{o}{.}\PY{n}{barh}\PY{p}{(}\PY{n}{y\PYZus{}pos}\PY{p}{,}\PY{n}{chk\PYZus{}index}\PY{p}{,}\PY{n}{align} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}yticks}\PY{p}{(}\PY{n}{y\PYZus{}pos}\PY{p}{)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}yticklabels}\PY{p}{(}\PY{n}{pips}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{} ax.set\PYZus{}xticks(y)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{n}{title}\PY{p}{)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{invert\PYZus{}yaxis}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsection{Creating two DataFrames - with media and without
+media}\label{creating-two-dataframes---with-media-and-without-media}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{df\PYZus{}wo\PYZus{}media} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Whatsapp Chats}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Image omitted}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{==}\PY{k+kc}{False}\PY{p}{]}
+\PY{n}{df\PYZus{}wo\PYZus{}media} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Whatsapp Chats}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{video omitted}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{==}\PY{k+kc}{False}\PY{p}{]}
+\PY{n}{df\PYZus{}wo\PYZus{}media} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Whatsapp Chats}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GIF omitted}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{==}\PY{k+kc}{False}\PY{p}{]}
+\PY{n}{df\PYZus{}wo\PYZus{}media} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Whatsapp Chats}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZlt{}Media omitted\PYZgt{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{==}\PY{k+kc}{False}\PY{p}{]}
+
+\PY{c+c1}{\PYZsh{} df\PYZus{}wo\PYZus{}media.reset\PYZus{}index(drop=True)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsection{Dropping Nan values from the
+dataframes}\label{dropping-nan-values-from-the-dataframes}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{df}\PY{o}{=}\PY{n}{df}\PY{o}{.}\PY{n}{dropna}\PY{p}{(}\PY{p}{)}
+\PY{n}{df\PYZus{}wo\PYZus{}media}\PY{o}{=}\PY{n}{df\PYZus{}wo\PYZus{}media}\PY{o}{.}\PY{n}{dropna}\PY{p}{(}\PY{p}{)}
+
+\PY{n}{df} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{n}{drop}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{df\PYZus{}wo\PYZus{}media}\PY{o}{=}\PY{n}{df\PYZus{}wo\PYZus{}media}\PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{n}{drop}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsection{Creating an User array}\label{creating-an-user-array}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{user\PYZus{}list} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Users}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{unique}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}Messages per user (including media)}
+
+\PY{n}{chats\PYZus{}per\PYZus{}person}\PY{o}{=}\PY{p}{[}\PY{p}{]}
+\PY{n}{most\PYZus{}msg\PYZus{}by\PYZus{}user} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+    \PY{n}{temp} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Whatsapp Chats}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Users}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{==}\PY{n}{user\PYZus{}list}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{]}
+    \PY{n}{temp} \PY{o}{=} \PY{n}{temp}\PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{n}{drop} \PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+    \PY{n}{most\PYZus{}msg\PYZus{}by\PYZus{}user}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{temp}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+    \PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n+nb}{len}\PY{p}{(}\PY{n}{temp}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+        \PY{n}{temp}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{+}\PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ }\PY{l+s+s1}{\PYZsq{}} \PY{o}{+} \PY{n}{temp}\PY{p}{[}\PY{n}{j}\PY{p}{]}
+    \PY{n}{chats\PYZus{}per\PYZus{}person}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{temp}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+    \PY{k}{del} \PY{n}{temp}
+        
+\PY{c+c1}{\PYZsh{}Messages per user (excluding media)}
+\PY{n}{chats\PYZus{}per\PYZus{}person\PYZus{}wo}\PY{o}{=}\PY{p}{[}\PY{p}{]}
+\PY{n}{most\PYZus{}msg\PYZus{}by\PYZus{}user\PYZus{}wo} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+    \PY{n}{temp} \PY{o}{=} \PY{n}{df\PYZus{}wo\PYZus{}media}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Whatsapp Chats}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{[}\PY{n}{df\PYZus{}wo\PYZus{}media}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Users}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{==}\PY{n}{user\PYZus{}list}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{]}
+    \PY{n}{temp} \PY{o}{=} \PY{n}{temp}\PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{n}{drop} \PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+    \PY{n}{most\PYZus{}msg\PYZus{}by\PYZus{}user\PYZus{}wo}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{temp}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+    \PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n+nb}{len}\PY{p}{(}\PY{n}{temp}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+        \PY{n}{temp}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{+}\PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ }\PY{l+s+s1}{\PYZsq{}} \PY{o}{+} \PY{n}{temp}\PY{p}{[}\PY{n}{j}\PY{p}{]}
+    \PY{n}{chats\PYZus{}per\PYZus{}person\PYZus{}wo}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{temp}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+    \PY{k}{del} \PY{n}{temp}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsection{Bar graph to represent most messages per
+user}\label{bar-graph-to-represent-most-messages-per-user}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} fig,ax = plt.subplots()}
+
+
+\PY{c+c1}{\PYZsh{} y\PYZus{}pos = np.arange(len(user\PYZus{}list))}
+
+\PY{c+c1}{\PYZsh{} ax.barh(y\PYZus{}pos,most\PYZus{}msg\PYZus{}by\PYZus{}user,align = \PYZsq{}center\PYZsq{})}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}yticks(y\PYZus{}pos)}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}yticklabels(user\PYZus{}list)}
+\PY{c+c1}{\PYZsh{} \PYZsh{} ax.set\PYZus{}xticks(y)}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}title(\PYZdq{}Number of messages per person\PYZdq{})}
+\PY{c+c1}{\PYZsh{} ax.invert\PYZus{}yaxis()}
+\PY{n}{plotGraph}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{,}\PY{n}{most\PYZus{}msg\PYZus{}by\PYZus{}user}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Number of messages per person}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{WhatsappChatAnalyzer_Final_files/WhatsappChatAnalyzer_Final_21_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} most\PYZus{}msg\PYZus{}by\PYZus{}user}
+\PY{c+c1}{\PYZsh{} chats\PYZus{}per\PYZus{}person}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsection{Mostly used words by each
+user}\label{mostly-used-words-by-each-user}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{scipy}\PY{n+nn}{.}\PY{n+nn}{stats} \PY{k+kn}{import} \PY{n}{itemfreq}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}Message frequency without media files}
+
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+    \PY{n}{fg} \PY{o}{=} \PY{n}{itemfreq}\PY{p}{(}\PY{n+nb}{list}\PY{p}{(}\PY{n}{chats\PYZus{}per\PYZus{}person\PYZus{}wo}\PY{p}{)}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ }\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}
+    \PY{n}{fg} \PY{o}{=} \PY{n}{fg}\PY{p}{[}\PY{n}{fg}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{n+nb}{float}\PY{p}{)}\PY{o}{.}\PY{n}{argsort}\PY{p}{(}\PY{p}{)}\PY{p}{]}\PY{p}{[}\PY{p}{:}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+    \PY{n+nb}{print}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,}\PY{n}{fg}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{:}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/home/rudviq/.local/lib/python3.6/site-packages/ipykernel\_launcher.py:4:
+DeprecationWarning: `itemfreq` is deprecated!
+`itemfreq` is deprecated and will be removed in a future version. Use instead
+`np.unique({\ldots}, return\_counts=True)`
+  after removing the cwd from sys.path.
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Vamshikiran [['I' '184']
+ ['nhi' '176']
+ ['toh' '175']]
+Rushikesh N [['to' '344']
+ ['😂😂' '289']
+ ['me' '249']]
+Ritesh [['to' '754']
+ ['me' '465']
+ ['I' '407']]
+Rudviq [['nhi' '569']
+ ['me' '565']
+ ['toh' '477']]
+Shrikant Karhale [['nh' '411']
+ ['bhi' '371']
+ ['ke' '345']]
+Atharva Puranik [['😂😂' '135']
+ ['h' '123']
+ ['nhi' '122']]
+Suraj Rao [['😂😂😂😂' '133']
+ ['nahi' '119']
+ ['me' '118']]
+Gaurav Warad [['😂' '125']
+ ['😂😂' '101']
+ ['the' '70']]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsection{Number of letters per
+user}\label{number-of-letters-per-user}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{regex} \PY{k}{as} \PY{n+nn}{re}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{chats\PYZus{}person\PYZus{}only\PYZus{}text}\PY{o}{=}\PY{p}{[}\PY{p}{]}
+\PY{n}{only\PYZus{}text} \PY{o}{=} \PY{n}{re}\PY{o}{.}\PY{n}{sub}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{[\PYZca{}a\PYZhy{}zA\PYZhy{}Z0\PYZhy{}9]}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{chats\PYZus{}per\PYZus{}person\PYZus{}wo}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} only\PYZus{}text}
+\PY{c+c1}{\PYZsh{} chats\PYZus{}per\PYZus{}person\PYZus{}wo}
+\PY{n}{tot\PYZus{}no\PYZus{}text} \PY{o}{=}\PY{p}{[}\PY{p}{]}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+    \PY{n}{only\PYZus{}text} \PY{o}{=} \PY{n}{re}\PY{o}{.}\PY{n}{sub}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{[\PYZca{}a\PYZhy{}zA\PYZhy{}Z0\PYZhy{}9]}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{chats\PYZus{}per\PYZus{}person\PYZus{}wo}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}
+    \PY{n}{only\PYZus{}words} \PY{o}{=} \PY{n}{re}\PY{o}{.}\PY{n}{sub}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{[\PYZca{}a\PYZhy{}zA\PYZhy{}Z0\PYZhy{}9\PYZus{} ]}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{chats\PYZus{}per\PYZus{}person\PYZus{}wo}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}     only\PYZus{}words=only\PYZus{}words.split(\PYZsq{} \PYZsq{})}
+\PY{c+c1}{\PYZsh{}     while(\PYZdq{}\PYZdq{} in only\PYZus{}words):}
+\PY{c+c1}{\PYZsh{}         only\PYZus{}words.remove(\PYZdq{}\PYZdq{})}
+    \PY{n}{chats\PYZus{}person\PYZus{}only\PYZus{}text}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{only\PYZus{}words}\PY{p}{)}
+    \PY{n}{tot\PYZus{}no\PYZus{}text}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{only\PYZus{}text}\PY{p}{)}\PY{p}{)}
+
+\PY{n}{tot\PYZus{}no\PYZus{}text}
+\PY{n}{only\PYZus{}text}
+\PY{n}{chats\PYZus{}person\PYZus{}only\PYZus{}text}\PY{p}{[}\PY{l+m+mi}{7}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+'Athrya ko bhaga diya tum logon ne      Coronavirus death toll  2     Sarang
+Lon   kon Guys    Contagion Yeh movie dekho Feels so real   Spread of a virus
+Online lecture karna hai kya  Aaj ka din karenge  Same    Kuch nahi Corona chal
+raha hai 0 Score kay ahe             Chalo kuch karte hai   Nahi re khana kha
+raha tha    1 lakh Mi nahi kela re  What swades  Movie  Wow Ritya ke pass backup
+hai Mazyakade plot ahe Ani business takel Kyu dara raha hai  Ha    Delhi bhi
+lockdown pe hai Kheti hai lekin paani nahi hai Karnataka Hai re Ek do din mein
+pata chalega Sabka Testing chalu kiya hai na abhi  Exactly    Question mark
+idhar hai Sanchar bandi mhanje kay  Mai abhi groceries lene gaya tha    Sab
+jagah police   Muze bhi roka He s weird   Ha Actually uske ghar ke bahar ka hi
+photo tha woh Mi pn tikdech rahto so mla mahitiye Yes   he should be at home
+My cousin in US went for a long walk today Government cancelled all interstate
+travel in delhi So many UPians were stuck in Delhi  Yeh maine ndtv pe Dekha Yeh
+ndtv pe Nidhi Razdan kab aati hai  Waiting for her Heard somewhere that Beed
+city had 26k punekars and mumbaikars coming in in last couple of days Hao na
+https   www washingtonpost com health 2020 03 23 coronavirus isnt alive thats
+why its so hard kill  Maharashtra chi century zali   India 506   Athrya having a
+meltdown All is well Olympics postponed by an year      They re not beating up
+anyone Good to know     I ve read somewhere on twitter that only 6  of total
+cases are in countries where average temperature is greater than 18 C  Ho sakta
+hai Yeh Modi saala kitna slowly bolta hai     Kab se baat kar raha hai ye
+Woh kagaj hath mein rakh    Police dikha ki kahaj dikhadena Nahitr he hoil
+Jau nako mg tu   Happy Gudi Padwa        Tu baghitlis ka    Tr baghun review
+sang   mh baghto mi Congrats athrya    Dekha maine bhi Kya hai nahi samjha https
+www theguardian com world 2020 mar 25 bolsonaro brazil wouldnt feel anything
+covid 19 attack state lockdowns Brazilian president says he want to reopen
+schools because only elderly are affected     Ikde ala hota kal thoda paus   Tu
+gharich raha Societies lock kelet punyat asa aikla mi      Ha Chalo re Skype
+call karte hai    So laptop varun Maza pn fog ahe Facetime      Skype na final
+Download kar raha hu main    Tu laptop pe kar    Fog ayega Nahi toh Kunachya
+tari phone ghe na mg    Aai papa etc Tula phone bhetla  Food morning sir Aiklay
+Bhari    Joker was way ahead of his time   What s it about  Uh huh 700 cross
+Sham ko 4 5 baje you want a big house    Mi good wife choose kela hota  Varies
+from person to person Boris Johnson has covid19    The the PM of UK  Old people
+are called boomers   Slang term Ha kon ahet te   Ha Mi dupari pathavla hota hech
+Dyanda   Aa dyanda la kahi nahi mhanaycha Tech te Downloading 22 Iron Man  I m
+signing up now I m gauravwarad Ye kiski bate chal rahi hai  Doland who  Ye house
+party pe Kuch hai Tu download kela Ka  Good night then Yup Guys special ops mein
+kuch adult scene ya gaaliya hai kya  Papa baithe hai sath mein Toh akele mein
+dekhu na    Ha   last week cha ahe Abhi US ko dekho 1lakh Ajun pn complete
+lockdown nahiye tikde      Kal xi la call kelyanantar Coronavirus bolala Xi
+jimping Chinese pm Kahi pn Ka  20 trillion dollars chi economy tr ahe Ka tyanchi
+Saale ko batman banana tha Muze laga barish chalu hai Me too I m watching with
+younger sister Woh Ganga ke bete Ka naam kya hai          Baher nako jau atta
+Maharashtra 186 Saam tv Ritya we ll miss you      Chup ho jao aur TV pe ramayan
+dekho TV pe Dekh sabke sath   bachpan wali feeling aati hai Are peak in China
+aake gaya Baki sab countries mein abhi peak pe hai Sita is about to see Ram for
+the first time      Pura lockdown kiya tha Then go to China Ye kaunse news padta
+hai re tu   Guys shaktiman   10 pm Dd national Aaj se chalu hone wala hai And
+1pm noon Ramayan bhi Want Ben 10 Chahiye muze Shut up and watch ramayan
+Ramayan Dekho re Ram sita ki shadi chalu hai Kitne mare  Kal 20 hote na
+Jalgaon che kiti   Ha Kal pahli bar mile aur aaj shadi       Special ops ki
+ending nahi samjha mai   Unke paas bomb kyun nahi the  Oh bhai    Toh count bol
+de    MH govt announced salary cuts for all government employees    Teri shadi
+ke liye ladki Delhi thi Khatam hogaya ab Maharashtra 300 Mumbai mein 59 badhe
+Ritya jalgaon wala mela Mumbai 156          Latur mein nahi hai ab tak Ha Ritya
+baher ahe bahutek    Lelo Ha  legendary Hindi movies   Agar marne wala hoga toh
+bike muze dede yaar Chalega Usme 56 Mumbai   Sir toh event 8 march la hota
+Before lockdown and all https   www ndtv com india news coronavirus india delhi
+markaz nizamuddin mosque sealed after 7 covid 19 deaths 850 moved out for qu
+2203336 https   www ndtv com india news coronavirus india delhi markaz
+nizamuddin mosque sealed after 7 covid 19 deaths 850 moved out for qu 2203336
+Wapis tabhi aa gaye the    Wapis aa gaye     Ritya jaldi type kar Yeh toh sabko
+pata hai Nahi pata Nahi       Sampla Abhi ramayan shuru hua hai Laxman ne usko
+unke mummy ki dekhbhal karne ko bola Urmila ki jai   Aadat nahi hai use Raja ki
+beti hai na   Yeh sab log bhojpuri bol rahe hai     918668611629 Ashu ko dikha
+inspiration milega Ho na    Sabka kitna ladla hai        Kaun tha woh bacchha
+Spoilers   I know the story too    Ad ko bhi abhi ana tha   Mere pass time
+dikhane wali ghadi hai Isko kaise pata chala Ramayan Mahabharat Shravan ki maaa
+Abe woh mar gayi abhi     Shrap mil gaya Dashrath marega abhi      I can t watch
+it       Me too        Kal subah ke episode mein dikhega ab I m about to cry It
+s too emotional Feeling bad for bharat Mereko nahi pata What      Gambhir
+getting jealous 10 saal bad bhi woh naraj hai   Kon Kya Bichare doctors test
+karne ke liye Gaye the Krishna abhi paida hua Yeh Krishna Ka baap use leke kaha
+jaa raha hai  Ispe Kuch reactions  Doctors on strike is the last thing we need
+rn Yeh saanp kaha se aa gaya Oh Now the media will do their thing and fuel Hindu
+Muslim hate   Yeh vasudev bacche ko exchange kar raha hai      Ha karo Agar sirf
+Muslims pe action liya toh Hindu Muslim tension badhega  Ho sakta hai MP CM is
+openly threatening Yeh kya chalu hai I used to think iPhone ka camera acchha
+hota hai Tereko itne msgs aate hai       I get it No Shaktiman dekh Kay zala
+Shaktiman baghtoy Ka Tu pn  9 baje       918668611629 ramayan madhe kay chaluye
+Idhar ki light gayi hai Air barish chalu hai https   www bbc com news world us
+canada 52137160     Light gayi hai Barish chalu hai Andhera hi andhera hai Woh
+barish mein jati hai kabhi kabhi Guys   Modi  le bhakts    Ha Ho na Ravan wasn t
+that scary or bad in real   people worship him   There are a few books narrating
+ramayan from ravan s perspective   Congrats    918600621866      Question bhi
+puchta hai Ha ha thike thike Ha Kal first dekha clg  exam form chi website kay
+hoti    What  Marla  Baher neun sodla nahi  Latur Yes Ispe comments dekh
+Everyone wants to know about his girlfriend      Hmm Anyone here turning off
+their lights    9 The group is dead    Same here Diwali My pappa scolded me
+Because I wasn t turning off lights Modi ne pagal kiya sabko I m hearing sounds
+of firecrackers   Rushi jinda hai   People in my colony are doing the go corona
+corona go thing   PEOPLE ARE STUPID   yeh bhi jinda hai Barish shuru ho gayi ab
+Phatake wale bhag gaye   waiting for next task from the big boss   That s funny
+and scary   Really satisfied by Uddhav s leadership   I was shivsena s biggest
+hater Politics nahire 3 baki hai Pratishta Parampara Anu Hope people weren t
+dancing in front of that       Hanuman ki entry Jald hi hogi Weekend hai Mala pn
+vatla toh ritesh ahe Shrutika Senior ahe apli I think Ritya ke piche athrya bhi
+hai thik se dekho Ha chal raha hai 2 months           Mila kya fir  Guys ludo
+khelte hai       Mai bhi Vamshi aa gaya Aur koi    6   Not sure Trump will get
+second term It s Trump vs Joe Biden   Yes   Bernie Sanders would ve been a good
+competitor tho But he dropped out Ho Joe Biden is chotta Trump   Dono same hai
+MAGA Some policies are different   And   Do they have the Kung flu  Oh Okay
+Idhar badal hai   Ohh Moon dekho Bohot mast dikh raha hai     Yupp Nahi be
+Guys    Zoom call karte hai Nairobi is love  Police just beat up a guy in my
+colony      I was enjoying the view from my gallery     Yeh mera status tha
+Ha As expected     Ha                     Guus Guys Guys  Minutes of meeting  A
+friend sent me this Haha Sab orange wale hai idhar Except athrya Yeh Vamshi ka
+kaunsa colour hai  Understandable   population density bohot hai     gramin
+Tyala kahi nahi honar Only cities will be affected Shetat jaun Bagh      Athrya
+he kay ahe   List of Tata products  Video call   Nko I m busy rn   Guus Guys
+Guys Online medicines ki delivery chalu hai kya  Guys I feel bad for Ravan Wah
+Paneer or batata  A little misguided Kumbhkaran His sons Thinking of his wife
+Or a girl who already is in a relationship    919175087161 Except that your
+fighting is not that cute  Itne saare deleted msgs     919922671311   Shrikant
+ne deleted msgs wala app install kiya kya  Use pata hoga    Guys we should do
+conference call atleast once a week           Call pe kata hoga Maaf kar dijiye
+Ha then vamshi had a breakdown here    Now let s check with the phone company ki
+vamshi ko 5 30 ko kiska call aaya tha Toh tu bol vamshi ko kya hua   If no one
+gives me answer I come up with one Nandu jaldi bana meme Ye muze bhi laga Nandu
+jaldi Go make your parents proud Woh mera bachpan se Sapna tha detective banane
+ka Status dalna kya badi baat hai  Mere dadaji bhi bhagwan Ka photo dalte hai
+status pe       Kata lekin vamshi is denying it Topic pe wapas aao Vamshi bol na
+kya hua Kata kya  Tune kata kya  Vamshi can t control his emotions Vamshi
+suspense bohot bana raha hai tu Jaldi bol We want details   Me too She lost
+everything Laxman cheated 3 actually On first day On second indrajeet almost
+killed laxman Indrajeet won my heart Shut up Ravan made a mistake A truce So we
+can talk about ramayan Indrajeet died bro     Tbh I don t even know what the
+discussion is going on about   I don t want to be a part of this childish fight
+Vamshi did it again    Vamshi stop deleting msgs   Guys Guys Ram Vs ravan chalu
+hai The final fight Dd national Aaj raat ke episode mein marega lagta hai ravan
+I still think this is not the real number    China is still lying    Mandu
+bichari  overconfident Oh no Aarti Bad luck He s scolding Mahadev      Dramatic
+exit Yeh bhagwan log upar se mast match dek rahe hai Popcorn ki kami hai sirf I
+want a rath too Hey bramha give me one     I still want it It s ravan Vs
+everyone else Raat mein dekhenge koi baat nahi Uska kata hai Inspired from najar
+hati durghatna ghati     Who s that  Anyone from Congress        Screenshot
+Screenshot Ravan died sir     Vibhishan ko Dekh    Kitna ro raha hai That s not
+how he dies in real tho    He apologizes to vibhishan and ram And recognises
+Hanuman as avatar of shiva Was waiting for that Mandu is here now Kuch ajib bola
+Woh   Nadi pe ban something Vibhishan the snake Gaddar Yeh chata leke kaun aya
+hai  Ram is getting Lanka      She just lost her husband Vibhishan did it for
+the kingdom Nana is crying too                     Ravan ko bech diya Like
+kumbhkaran Or sanyas le leta  Yeh toh opposition party mein chala gaya  enemy
+party Sita kidhar hai    War ho gaya na Yeh uttar ramayan kya hao  hai Vibhishan
+single tha kya   Congratulations bol raha hai   Log kaise line se khade hai
+Sita isn t happy   She s crying again    Agnipariksha  Me too   Kar kar What was
+that for btw  Clean  Oh   you mean check if she and ravan Ha Agni There he goes
+Agnipariksha  Atyachar Laxman knows it Laxman makes sense It s ram Vs laxman Ram
+is just sugarcoating it It s atyachar What      Sita original Nahi thi      Yeh
+kya chalu hai     So why fight for a duplicate Sita    Hanuman be like That
+whole story of agnidev protecting sita looks fake   Only to make ram look good
+To justify agnipariksha  Ram doesn t deserve Sita    Yes exactly Yeh takla kaun
+hai  Narrator Sulochna kaun ago   hai  Sati           Wah Usne reportedly fake
+news bola TV pe   That trains are starting on 14 th So people gathered at Bandra
+station    Yes Abp and India today condemned the arrest   Prison break Kay
+boltoy to It is             Guys aaj video call karte hai            Kal hai
+Zoom pe  Hmm Kon Swamiji  McD or Domino s          What program   Kya hai Abhi
+I m in a meeting    4 or 4 30     Wow             Chala hawa yeu dya
+Noice     people   Itne bade msgs type kaise kar lete ho      This message was
+deleted   Movie or series  Dekhte hai Ratsasan NO Yeh Dekh  918600621866 Toh
+dekh na Hmm  919175087161 haha Yeh dekhi toh aage bolunga         Dekha kya
+Latur 9  8 recovered Aur suggest Karu  Okay It s your problem then   https
+youtu be yt4PO\_lfe0o kab    kaha    mai kaha tha   why did i miss this   smh the
+day after tomorrow ha black mirror dekh warning stranger things family man Sex
+education dekh fir Nahi Tu bhi mar ja   Yes Nahi Yeh kaisa excuse hai bhai
+Happy birthday                     Guys Guys Irfan khan              Yes I
+downloaded that already      what is the meaning of this emoji    yeh chal kya
+raha hai   someone brief me i miss iron man i miss pizza buffalo ne yeh anand
+aur sameer question bank kyu bhej rahe hai    exam notification aya hai kya koi
+Yes Actually we can t be in lockdown forever We have to lift it now Otherwise
+people will die of hunger and malnutrition Now it has become more risky
+Lockdown is actually a temporary measure to slow down the spread i think bus ho
+gaya    abhi lockdown hatana chahiye economy dub rahi hai      https
+economictimes indiatimes com news company corporate trends lengthy lockdown will
+kill more people than covid murthy articleshow 75459491 cms exactly     17th may
+tak Hmm   Guys And the school headmaster has to manage them        Yes Yeh ram
+Ka problem kya hai    Laksman ka bhi tyag kar raha hai         exam schedule
+abe likhna chod   If any doubt    sarang Zor se bolo AZAADI kitne stickers
+bhejega be aisa lag raha hai ki tu noob hai noob   I have a video of you saying
+that word    I dare you to open that in front of your parents    Tapowan gate
+rao nahi chad sakta utna     our noob is back with another sticker       exams
+yes   lol pdf hai mere pass nope   abey saale wipro ka puch raha tha Kab Ka aaya
+hai ye oye shrikant mera bhi kar de    roll no bolu   shrikant mai tuze samosa
+dunga mera karde bas anything to get the job done    so do we have a deal here
+Stop screaming Rao Ajun Nahi pathavla Ka mi Apne subjects kitne hai  Are Bhai
+bhai bhai IOT wale mar jao Because his parents had sex  Raghu Ka screenshot hai
+lol  918600621866 jaldi vamshi ko selfie nikal ke bhej de italy chalte hai
+Wow   is she sleeping   Use pata nahi hoga camera band kar sakte hai Aaj hua kya
+kisika oral    510 swarg lok         yeh reason hai toh thik hai    abe teri
+batch kaunsi hai        abe tuzi d batch ahe     919130526155 dekh le iss sem
+mein alag batches hai kabhi practical kiya hota toh samaz jata  918600621866
+teri A hai shayad         https   youtu be FtZHY2bRbCQ   yeh CLX kya hai  teri
+oral ho gayi kya  This message was deleted A   https   youtu be 8iPCKfkXmew What
+s kolhyachi bhaji  Guys Guys Guys I m doomed Mere papa ke school mein quarantine
+center tha Turns out one of the quarantined person is  ve I m doomed Papa udhar
+rehte the school mein Ha kela And my dad was sneezing  Bhagat Singh  Woh
+governor Inko exam honi chahiye Yeh varada abvp wali hai Mazi pn bhar    Yeh
+sarang ne link kyun delete ki  Mereko 22 mile      ha facetime sirf apple users
+ke pass hota hai  ek google fake account se ek bar bhar do aise bhej nahi sakte
+tu question bol shuffled hai bhai questions already itne fake responses aaye hai
+42 https   www youtube com watch v Aymrnzianf0 yeh kuch jyada nahi ho gaya
+uska bday hai aaj Ismein Rudviq bhi hai      1   people   abe maine nahi kiya
+khud kar A measure of connectedness between components of graph is \_\_\_\_\_\_\_\_\_\_\_
+iska bolo koi Q 14 hai yeh 15 ka Commetrix 16 tulip Sameer hoshiyaar hai maine
+fake id se try kiya tha Gabbar is me    Rahul for PM    that defeats the whole
+point of having a democracy this is the funniest news of 2020 so far tho a lot
+of other renowned firms claim this package is between 1 to 2 5 lakh crores lol
+rn he would ve called Xi Jinping and shouted at him      Kitna bakwas roast kiya
+hai kamra ne Dislikes toh dekho video pe Kamra ne Carry ke sath panga liya hai
+Mere uncle family group pe aise msg dalte hai   Right  maine bola nahi ab tak
+Yeh takla gang kaun hai  What happened  Itna bada confession aya hai     Sand ki
+aankh Yeh bolo muze pehle 1917 Dekh le   Life is beautiful 1977 Bohot bhari hai
+yeh movie Are muze koi samzhayega ho kya raha hai  Toh call pe bata   yeh toh
+kabhi nahi hoga Usne story pe poll liya Ha news mein tha yeh  Bhej hame bhi Tere
+pass kya hai fir  I like cats Takla gang chi complete story I want Story   Chup
+Go athrya Villian Takla gang pe confession aya Itni English aayegi kya ise lekin
+Daav mhanje  ACM mein bhi thi kya   Yeh athrya kaha gaya Story bolne wala tha
+woh   We don t do that here Pagal sala athrya XD tu story bol la la lol abp pe
+break chalu ho gaya abhi athrya ayega athrya gaddar hai nahi hogi re aise kaise
+hogi  exam jab schedule hogi tab apna death toll itna bada hoga ki uska kaun
+sunta hai be correction yeh toh kuch bhi nahi shrikant ne sahi time pe janam
+liya aur ek year drop liya   is janam mein itne pap kiye hai same here
+918668611629 kya chalu hai bol  exams nahi hogi yeh toh ho nahi sakta
+919049792879 kidhar hai   In Maharashtra This message was deleted   I doubt if I
+ll see you guys ever again   Aur abvp   Ha mai leke aya na   It s like we went
+home for a short vacation and that vacation lasted forever  Tu story nahi
+sangitli ajun   He earned 8 lakh votes today   We already have jobs Rushi is on
+our side     Yeh kab hua  918379946202 Aaja WhatsApp dp bhi remove kiya
+918379946202 we need answers Details Please Awww Tune aisa kya bola use
+Not me I think Rushi Yeh bhi hai Sajid Wajid wala Wajid died today due to
+covid19    Ha Dekha   Shivsena shivsena Bohot jaldi nahi uthe tum log
+Rao the tiktoker Rao Tiktok bana raha hai   Tune Instagram choda hai na  Toh
+bhej na Isita Ishita ne bhi mast reply diya Follow her on Instagram Ha I2IT
+confession ke admin ne bhi maari confessor ki Muze Rudviq lagta hai kabhi kabhi
+Ha Coding karta hai post karne keliye Yeh  919049792879 apne ko story batane
+wala hai ki nahi Ami and Isita toh roommates hai na  Ha         Nahi Dekhta Bhai
+68 comments hai us post pe   Teri bhi dekhi Mast likha Ha Ignore karna Chahiye
+tha sabne Lekin acha laga   Saala ludo khelta hai Family ke sath  Muze Lagta tha
+ludo crush ke sath khelte hai handleyourownego ne  919049792879 story bol na Ha
+Bol     Mere bhi same questions   Ankushva on   Apna Infosys Ka kya scene hai
+Aise kaise jau udhar  918600621866 PJP zala ka  Wipro pre joining program
+Website chalat nahi tyanchi Rat ko load Karke rakh aur din bhar solve karte
+baith     Desperate for attention        abhi check kiya maine       Ha
+Parents ne nahi suna wah https   www youtube com watch v l3XpO57fZtY Rahul for
+PM     This is what a failed lockdown looks like   https   photos app goo gl
+cMqpxzJRtpsZVKUh6 Ritya aur ice gola   Mi fakt kharab photos takat hoto
+Zuckerberg sanp hai   Original 600 mb ka hai   Yeh kaha se forward kiya re tune
+abe thanku thanku abey youtube pe kyun dala     toh tere photos dal sirf   mere
+bhi photos hai usme  dude seriously atleast private kar woh video  919049792879
+private kar Ab Apne project ke grp mein dalna baki hai bus    Abhi 4 group pe
+yahi msg dekha maine   Kbc wala lock  Exam toh fix cancel hai Aaj bhi Kuch toh
+hua shayad           hindi bolay re yes i know  mygov something what   it s just
+another social media the one that we all hate tho the thing is we are dependent
+on china we can t just stop using chinese products mitron is pakistani btw ha
+thike Abe tu toh Pura farmer ban gaya Engineering kiya hai bhul jayega Ik Ha
+Aise phatake khilake nahi marte lekin Kiska  Ho gaya mera     I asked you like
+10 times     You said go ahead I went ahead I take my privacy seriously  No one
+s ever cursed me this much    Mai offend ho jaunga bol raha hu   Read the chat
+So jao sir https   youtu be 9SIvxaxWHms yeh rao yeh kya bhej diya tune       ha
+chalega Ise  Nonstop pronounce karoo    maaza aa raha hai raat ko karte hai na
+mereko khelne jana hai  Tennis Abhi  Tennis caaanceel ho gaya btw    Kabhi bhi
+Chalega muze Ha   Rao nahi hai Shaayad is   video call karo re kay
+918600621866 https   zeenews india com world mayan calendar was wrong and world
+will end next week on june 21 warns conspiracy theorist 2289849 html amp    Damn
+i m fearing this might become true Aatishi tests  ve for covid 19  918668611629
+918600621866 The most educated politician in India who Sir reddit pe aao  https
+twitter com RizviUzair status 1273229041953239040 s 08       https   twitter com
+zoo\_bear status 1273190862269435904 s 08 Level up Bajrang dal breaking Chinese
+toy cars    people are stupid i love people mere pass bhi redmi hai okay riya
+ritya   arey bol This message was deleted https   twitter com spychotik status
+1273224233154301953 s 20 sorry twitter pe memes bante hai Satyandra Jain also
+tests  ve for covid19   918668611629  918600621866 ha retest no       btw do you
+remember he was present in the meeting with amit shah on sunday we ll find out
+in a few days https   youtu be  UapogBimLU Plot twist   credits dene ko bolta
+919175087161 kya kiya re tune  Denekkaa kkya     https   www latimes com opinion
+story 2020 04 05 meme directed by robert weide \_amp true \_\_twitter\_impression
+true    Maine call Kiya tha na tuzze I m purchasing one soon    Option nahi hai
+yaar most of the chinese phones are made in india  assembled in india i want
+lava phones    guys let s start a phone company    bohot scope hai abhi paisa
+nahi hoga uske pass    sab log paise paytm karo use kya fayda and FIR was
+registered on the journalist who covered this story     cancel sound record kar
+aaj lokmat mein aaya hai kuch toh    i read somewhere that how Modi is a teflon
+personality    Hostel ka samann  hopefully empty rooms ghetlya astil    The end
+of the world is here    Kal last din hai https   www youtube com watch v
+6lrPggGiGaw Tejas bhhau    walking deadd dekho         prison break dekh lo ha
+dekh le  918600621866  dekh le        Here s a song for you Woh mai parli gaya
+tha Yup       Fake hi toh tha But he had links to top politicians Police ke
+story mein mein bohot loopholes hai yeh ravi patki youtuber kab hogaya   jobless
+hai kya woh   Yeh kya hai  Saste wale Hmm I don t care about anything anymore
+mereko bhi aaya tha yeh call thank you thank you        thank you   haha thank
+you    thank you   Bichara jobless hai    sachin pilot sacked       yeh toh self
+goal kardiya congress ne   Dep CM post se nikal diya abe news dekh nahi raha kya
+https   youtu be 6\_pru8U2RmM https   www washingtonpost com world asia\_pacific
+india coronavirus 1 million cases death toll 2020 07 17 9c6aacac c0a2 11ea b178
+bb7b05b94af1\_story html Congrats    Guys dil bechara dekh lo    Mastt movie hai
+Snapchat      Nahi    Kaisi hai  Thike dekh ke bol kaisi hai       April mein
+hai uska   Anyway Happy Birthday  919175087161          But the mother tongue
+policy isn t fair  https   youtu be ztMsmT7V6tQ Carry   918600621866
+918668611629 dekh lo ye Kalalyas mala pn sang candidate id mail aaya dekhlo
+919175087161  918600621866  918379946202 abhi aaya hai mail     pata nahi meri
+toh external battery hai   aise hi nakal jati hai try kar ghar pe tu infosys ka
+dekh pehle priorities   Dear Candidate  whatever       That s why I use Yahoo
+mail       https   www reddit com r funny comments i1hadt
+i\_design\_fake\_products\_so\_i\_created\_a\_no\_germ  utm\_medium android\_app utm\_source
+share Wait for it     Same to you Mahatma Gandhi is set to be first non white
+person on British currency https   www dailymail co uk news article 8586361
+Mahatma Gandhi set non white person British currency html ito
+whatsapp\_share\_article masthead Driving class chalu hai    Jai sri ram This
+message was deleted https   youtu be zjm3t4gwcqo https   www reddit com r binod
+utm\_medium android\_app utm\_source share    Bolo You re welcome   Kaisa verdict
+This message was deleted Binod ki jai Aur sequence bhi dekh Happy independence
+day     Bhailog yeh kya chal raha hai Mahi retire hogaya   Congrats sir
+Infosys walo Ap ki joining kab hai sir   Ha    Tereko bola tha mai yes dal bolke
+Arey Shrikant ji ne no laptop available daala tha      Guys zinda ho  His uncle
+was murdered So he pulled out of ipl Happy Birthday Athrya     Ab yeh kya hai
+Seriously tho kya hai yeh  Sawdust    Bol na   Exam ke ek din pehle     Khidki
+open hoti vatta   Itne apples leke kya karega  Yeh aisa kaisa dp hai be tera
+Aggabai sasubai pe vivek tha abhi     https   twitter com bhatia\_niraj23 status
+1305480462337413122 s 08     https   youtu be 5NM\_WBI9UBE   https   youtu be
+PeCrnbJHJeY Get well soon rao Hall ticket  Yeh kab hua  pata nahi           100
+run se harna hai rcb ko       Mai voh cupboard mein baitha tha  Nahi   Kyun re
+Snapchat        https   youtu be xebSF8vRvZI Abhi karna hai kya https   youtu be
+szdbKz5CyhA https   youtu be qpFevF nF o Kisine diya kya mock  isme userid
+password kya hai      Chalu hai Nahi boring hai Apti Nahi Ha Chalu ho gaya kya
+Kaise khelte hai       i not L Mera net gaya  ho gaya kya   Mai bahar hogaya
+firse   Mami ko pareshan mat karna bachho Koi toh ladki join hui thi    Ha
+Conference call chalu rakhe  Chalo mereko bas hogaya Exams 13th pasun ahet na
+Amerika janeka shauk hai     On camera ki no camera     Sir window swich karta
+yet nahi     I m out IWP ka seedha book hai kya kisi ke pass   Yeh teda hai Yeh
+seedha hai  Code   I m out SMA ka rotated version    Nope Nahi khelne wala mai
+https   towardsdatascience com graph analytics introduction and concepts of
+centrality 8f5543b55de3 Oh shit Sry Suprabhat sir Kya karna hai  Kab dena hai
+As it is available so you can start at 3pm Iska matlab batao koi Hahaha Woh
+notification meh suggested response tha   27  all of the above 25 data mining
+Oh i thought among us ka room code hai   Yeh kaisa question hai  Sentence kaha
+hai  Oh bhai bohot depressing hai yeh Mat dekh The road Whatsapp backup jo hota
+hai woh unencrypted hota hai    Waha se sare msgs nikal sakte hai https   www
+thequint com tech and auto whatsapp end to end encryption chat leak security
+Device ka clone banate woh log Then they can easily retrieve the msgs Happy
+birthday sir        Mereko bhi lelo Black lives matter maybe   Happy Dussera
+Exam kal hai kya  Okay     13 00 Yeh kitne pages ka hai   OneLastTime finally
+download ho gaya    itni badi file hai    search nahi ho raha isme        This
+message was deleted   Nandurbar   Ishq ibadat ban hi gaya Infy ka mail aya kya
+bacchon Tuze nahi aya kya  Baki kisiko nahi aya kya   919175087161  919130526155
+Kai akela jake kya karu Thanks bois Yeh niche training mein classroom virtual
+training kyun likha hai fir  yeh kaun hai   Mai bhi Call chalu kiye kya
+918600621866 call chalu jar na  kar   Meri suno Good night Sir training online
+hogi apni shayad                         That is the question Air purifier use
+kar   Latur bhi dekh le bhai Abe latur chod ke sab bheja tune    Abr kahape dikh
+raha hai tuze  Yay moderate   Btw i resigned from DG tech today  Go Infosys
+Arey tere liye bhabhi layenge hum Uhm no     He said vote for Congress instead
+of vote for bjp    In College I still consider that as a possibility
+Next task Ohh Good morning   Bhai tu first season pe hai DC jitegi re chinta mat
+kar   DC   Duniya DC ipl detne wali hai   jitne Oh           Meri imagination
+yaha khatam ho gayi thi    918600621866 yeh RCB qualify toh hogi na  17 3 Jitna
+chod Yeh calculate kaise kiya hai   Kal SRH jita toh rcb bahar hogi vaise bhi
+Unki runrate bohot hai bhai Ohh Toh rcb ko sirf kkr se jyada runrate Chahiye
+Right Chal rcb qualify ho jayegi    9ball 25 runs Bot possible  not Congrats
+ritya Lekin match toh DC jitegi DC               SRH   Mereko DC vs RCB final
+chahiye Aaj KKR qualify hoti toh     SRK ko achha bday present milta tha   Ha na
+https   youtu be Nqk\_nWAjBus Arthritis disease cha naav ahe na    Tuze trump
+chahiye kya     nahi Dono right wingers hai I m saying bad for india   Trump
+tatya openly discriminated against NRIs     Thand bohot hai lekin udhar If i
+were a Bihari Ha mai bhi       Here s a fact And to counter china      Mai
+onions nahi khati OMG Yeh kab hua Oh    She s next potential pres too Mai news
+chalu kar raha ab From some sources Ohho    You anti national Abhi nahi Ali bhi
+gaya       Ritya underground ho ja     Mereko bhi pasad tha yeh banda DC RCB
+RCB gaya   Biden won      Ha jal rahi hai uski    Jalne de Pr binod jita na
+Original post something  Original poster OP Bhai subah subah kya ho raha hai
+tuze ITUS kya hai  Woh docs etc dekhna hai Nahi Yeh hota hai This is very
+popular on Reddit   Sabse mast mexican PM ka reply It s too early to
+congratulate Biden    president DC   tum logon ka joining date aya ki nahi   yeh
+saala gambhir kohli ko resign karneko bol raha hai     Bohot nahi re suspend kon
+bola be tereko h1n1 pata hai na ha na pehle se tha trump ne muslim ban kiya tha
+bohot purana hai woh   woh without tail hota hai woh kaunsa hai captain holt ka
+kaunsa hai cheddar woh ek pirate tha DC jitne wali hai IPL Ahh  Good ol days
+What  Techverito ne aur ek PC bheja           dekha hai maine yeh movie    achha
+hai   dekhta hu   maine bohot pehle dekha hai telegram check kar bheja na
+telegram pe movies mein dekha hoga na  918668611629 dating colleagues is allowed
+in infosys   ha office shuru hone do ek baar    maza aayega       Bohot boring
+hai yaar Dating HR manager is not allowed shayad   Sambhalke   Apke manager ko
+date kiya toh apko dusre team mein dalenge aise bola hai   Haha Lunch break hai
+Khana khane de Mere 3 panelists hai Bhai camera band hai   Correction 1 ladka
+hai       Ohhh muze laga lottery hai Technical or personal  Noice Aja Infosys
+mein Link bheju   Friends  Bhai bohot benefits de rahe hai Ha Titanium account
+Axis Bank vs ICICI kisme nikalu bol Ha AXiS ke benefits jyada lag rahe hai
+No bank charges for debit card ICICI it is then   KFC 15 percent off bol rahe
+hai Mai nonveg nahi khata      Free insurance bhi de rahe hai axis wale Still
+thinking about this    Woh bhi hai Abhi axis ka session chalu hai Compulsory hai
+Mere papa ka naam  warad  bol raha hai    news mai dekh leta hu bhai aur ek
+session hai shayad aaj ets wala kuch   soja call karta mai kuch hua toh They
+Already  use  Air  Filters  Harla na Bichara MGB harli na Comfortable victory
+for nda mhantayet Congress 20      Jinkayla kiti pahije     918600621866 20 out
+of 70   Rahul should resign  Shivsena ko NOTA se kam votes mile     And NCP ko 0
+23    64   counting zaliye fakt Trump hota toh stop the count bolta     Melenia
+opportunist hoti saali    Aimim ne vote khaye rajdeep bol raha hai Oh shit match
+This message was deleted This message was deleted Abhi score check kiya maine
+Shit Fir bhi DC   Yes ofc              Oh bhai Kya maar rahe hai DC wale
+Ha axar aur ashwin hai 156 MI bohot mar rahi hai      enter valid data bol raha
+hai kisiko dikha kya   hall ticket pe dekh B150958 aisa kuch hai jayprakashan la
+pn disla he even sent me his result to prove his point nahi maybe SPPU is
+playing with backend maybe the engineer at sppu dropped the database Congrats
+Yeh results mein sgpa aur cgpa dono kyun hai Kya sgpa ki cgpa  Ohh sgpa semester
+ka hota hai Cgpa overall    7 86 Same to you Sir aapka khul nahi raha Kya hai
+Good luck Bhai Infosys chod diya   Bhai tu hi baki hai YouTube down  Video play
+nahi ho raha check kar   Mereko gaana sunna tha na Meri pyari bindu Gaana
+Spotify pe nahiye yeh  Ohho Oh shoot Mera bhi driving class chaluye btw Pn maine
+video nahi nikala Will society accept me  Kyun  Chalake dikhata na direct Chalu
+kar wapas firse Yeh jyada sexy lagega        Yeh soumya bhand hai kya   Nandu ka
+ho gaya na  Teri bike kidhar hai Vamshi sir ko bhi hingoli bula le Mast ek car
+lelo rent pe Aur roadtrip karo Nizamabad morshi hingoli pune       All the best
+Happy Diwali   Nice Mobile la wire kay connect kela hota  Mereko hai Nice Side
+by side monitors pe jyada maza ata hai pr Ghar pe koi tv nahi dekhta kya
+919175087161  919130526155  918600621866 Mera bhi attend karde Bhai mails ke
+bohot strict policies hai inke  Link bhejta ruk No idea Tune service agreement
+bheja nahi na tune  Toh they have no proof we have accepted the agreement Boring
+hai And there are stupid people around me Session chalu hai    Nahi  yeh mere
+session mein pravachan chalu hai  don t go to US     india is always india
+india is always my india aur yeh chatne wale bahi bohot annoying hai yeh log
+from  infosys com to All Participants            bhai ek bacchha flirt karne
+laga hai ma am se  ma am you re so funny            chatna toh padta hai
+Ritya TCS jaa raha hai      X matlab kiss hota hai        Fir smile hoga shayad
+x Tu kaunse grp mein imposter banke baitha hai be  veg ya nonveg   thike mai
+nahi aane wala       All day Duo pe laga Duo pe dekh Bye bye Mai 15 min mein ata
+Hamari instructor late hai    Yes go  918379946202 Nahi     Chatting mein bhi
+maze hai   Nako Manali mein rakhte hai       Ha   Na Aap log decide karlo Bye
+I don t think anyone of them read the caption  Tu itna dhyan se itna lamba
+caption kyun padh raha tha yeh bol pehle    I already use someone s userid and
+password  Why to even go to the gym if not for that one after workout mirror
+selfie  Maine already band kiya hai    high on     919922671311 hostel pohoch
+gaye sir aap  Dekha  Mai nahi boycott kar raha      I wish Woh snapdeal tha
+Yeh kon bola Nice  919049792879 was anyone showing black flags to him   asking
+out of real curiosity  woh farmers ka protest chalu hai na toh   Bhai sapne mein
+aya tha kya Gurunath    Theatre mein dekha   https   youtu be R1Sy9RatBs0 Apni
+final year original marksheet kab milegi                    wth is pop  Ohh And
+how long will the queen live     And when will Rushi get a bhabhiji
+okay thanks  tune liya kya  my question has an answer   okay    i feel lucky
+Sham ko video call karte hai     Roa lifting competition   Rao
+Yup Ha   He was supposed to be immortal  Ab radhika masale ko mdh kaise harayega
+Aaj Queen Elizabeth ke bare mein soch ke dekh tu I m multitasking    correction
+kiya kya dob wala       the alchemist padhi hai tune  Nice       muze bhi what
+pdf hai mere pass     angels and demons movie nahi dekha toh book padhle  nice
+yeh bhi mast hai    nope  books are the best     congrats bro     yes please
+muze bhi dekhna hai support itna bhi bakwas nahi hota customer care aur support
+mein bohot fark hai arey promotions jaldi hote hai aur aise bhi infosys mein
+mostly sabko support mein hi dalte hai    Price for refilling oxygen cylinder
+hasn t increased actually                     Good night sire   Mala pahije Nahi
+HBOmax pe hai shayad Exam ki padhai kar Same hoga shayad https   youtu be
+1xflcAasvIA Kothrud          Fufaji galiya bhi bohot de rahe hai    Nice pata
+nahi Saturday should work This message was deleted Tennis court Oops Toh Friday
+jake Saturday wapas aa jayega  Nako                       Ha YouTube down Idhar
+ki light bhi gayi hai    With youtube down   Monday ko chutti hoti hai
+Maza ayega       Bing  Ha And they ll sell it as made in india product      And
+then with the extra load YouTube is back Aur idhar ki light bhi aa gayi
+rangoli nikalte baithna padega NICE walon ka software developer ke interviews
+hai      919175087161 accha chance tha tuze kya chahiye bol  i was a tech
+consultant  understanding business needs ha  Aniket Joshi ka prewedding shoot ka
+video dekha kya    editing bohot mast kiya hai      point hai Zombie movies
+dekhke preparations karo Nahi        yah toh hai More like walking dead Om om om
+om   Yeh kaun hai  Bajrang Bali ki jai https   youtu be e0Q6SWRcc3g   Khudko
+crop karke kyun nikal raha hai be Abey         Ha  Mangav tu pn  500 mein kitna
+ayega re  Ha idhar bhi https   youtu be 79FhEhWGXjw        PPA  Ohhh Got it
+Aapka kya plan hai  Ha Lol no   Me   nice   Happy New Year    https   youtu be
+4k0hJlCL7FQ Pyaar ek dhoka hai wala yahi Tammany hai na      https   youtu be
+Pwom49awRKg Comedy play hai yeh     News parodies hoti hai woh channel pe   From
+10 years ago congrats        919130526155 Sabse ghatiya wahi hai Matlab mai
+apply nahi kar sakta  Mai kya bharu     Muze karna hai fir bhi           Ha
+yaali madatwali flashbacks                                      which one are
+you  Sometimes I write the code but sometimes the code writes me i wish muze bhi
+chutti hai This message was deleted Aur Rudviq    Ritya s last message was in
+2020      Bangalore Days Placement dept ka mail dekha  Infy offering 8LPA
+ik ik Hain  Not me  Ha Swapnil ko puch fir     Hmm Kuch nahi  Mera toh ekdum
+mast gaya weekend      Pune se bacche aye the I wish   Woh comp wala grp     Ha
+Lol Kuch nahi Aur timepass   Ha Chalo hum bhi chalte hai kisi ke ghar Amravati
+chalo Jungle hai udhar    He used to brag about this Thike Thike gaana gate hue
+nahana   Ritya tu online kaise aaj  It not in your character Hmm hmm Naya
+project join kiya  Mumbai wala  Nice https   youtu be b71rpN1iJKA i watched the
+whole thing   guys how much did you pay for convocation fees  Okay I just paid
+685  Ha             that link is not working    ab muze calculus sikhne ki ichha
+ho rahi hai           I m busy     working day hai sir   How was your gd
+Population kam hua Lockdown ke pros bolne the Spent time with family etc etc And
+kirana dukan wale 40 mins ka tha na       https   youtu be 2TWXQnxqhPs https
+youtu be J1jlol6Vev4      Noice Runout and Diljit had another twitter fight
+Nice Ha that was the best             Wow  919175087161 aaja nanded Yupp Ho Ohhh
+Aise hi     Ha Yes   Infy ki exam hai      https   youtu be ovi9Fn9frP0    https
+youtu be 7YvxeXlLVnQ https   youtu be 5CWfyXbMrnQ TIFU by forgetting a password
+And btw they can t reset it I ll try         jyada mat soch        How s infy
+going  https   youtu be xa 4IAR\_9Yw   Kya re  918379946202   You know who Slap
+day     Or actually call ritesh and say that       dikh raha hai Aur ek clue
+Movie recommendation  Shweta ke friend ki gf sex addict hai  Nahi   shayad galti
+se lagaya tha athrya ne      Kon shashank  Yeh Jeo Root bowling bhi karta hai
+Too much Capitalism is bad  Just look at US Ohh call chaluye   communist china
+vibes        Guys Free hai  Aaja duo pe     He effortlessly did like 15 pushups
+when a student challenged him    Mereko 5 ke upar nahi aate na    Gokarna chalo
+Sab apne parents grandparents ki vaccination karvalo   Guys what s sustenance
+engineer  4 3 21 Aaj ki date   Amazon ka new logo dekha                Yeh kya
+chal raha hai idhar      https   youtu be Ss kLGW2pHQ I m busy Go ahead without
+me Nah I d rather not say Sure thing    919175087161 knows btw  Close Fissure
+Ha Yes Duo pe aa jao I don t think so  Usually brain dead logonke body parts
+donate karte hai na You re a good question BRAIN TRANSPLANT IS NOT POSSIBLE
+https   youtu be 2nHE EErdWs https   timesofindia indiatimes com city mumbai
+trial runs begin for electric victoria carriages in south mumbai articleshow
+81410023 cms    Bichari gir bhi gayi         https   youtu be 43dvsy2S9sg https
+www cnbc com 2021 03 11 why facebook is so upset about apple idfa change
+insiders spill html 12321 Aaj ki date      This message was deleted Hi Nandurkar
+RushikeshPradiprao    Nice name Ha ik ik   But yours is extra long        Yeah
+Naukri chali jayegi nahi toh  Ha Mast error tha  Suggest me some old marathi
+comedy movie  Makrand anaspure or laxman berde or ashok saraf   Thanks Russo
+brothers    I just saw makarand anaspure on chala hawa yeu dya You should watch
+what she wears when going to sleep btw when are we shifting to pune  And are we
+getting a flat together  I got another offer Nahi You can guess   Hinjawadi hoga
+shayad Ha  Me too      918379946202 location aaya  I m a good roommate Use
+earphones  And I m like Well Warning kisliye diya tha maine  Dusronke galtiyo se
+sikho        Do you guys know samir the driver   Wait https   youtu be D9
+voINFkCg And the comments are even more funnier  Shadap      you re breaking the
+car  dumbledore said calmly    Btw Athrya ko bike nahi aati na      This message
+was deleted who s the handsome guy              I guess fb is collecting wrong
+data about me   Btw that wasn t really a housewife grp      Rao was supposed to
+be the tharki one     I remember these        Bye    Anyone watching the match
+Eng    This aged well      wah Nah idk and i thought lokmat is being
+overdramatic    https   youtu be njos57IJf 0 lyrics    why d you name your
+company after your dick      i got a pc but not from you  Woh             Mi
+kuna sobat bhandu     Arey haaa    Aisi bedsheet thi uske pass bhi Kuch dekhna
+tha isliye reactivate kiya tha    Wow    btw        Nahi idk Yeh janvi ko bhej
+de  Deleted  Itna darr gaya  What if i say   Yahi baate toh baad mein yaad ayegi
+She s not that famous apparently    You have a chance   go Vamshi    Google
+karle    Context  Kashache bharle  Call khatam  9 baje kyun call karte ho yaar
+Dhyan nahi hota mera call pe   https   youtu be fn3KWM1kuAw     The sexual
+tension between Bucky and the Falcon in ep 2 is    are you watching the office
+don t watch clips on youtube thanks  918600621866  919175087161 match dekh rahe
+ho      Uhm why                            I still remember reading this in news
+and dying of laughter   Thanks for the clarification
+We follow Mysore ka timetable      Are you guys sure Vamshi s surname is
+morlawar  Virat and Anushka is virishka  Bhaskar   99 Wow  919922671311 Girgit
+kya hota hai       1  919922671311 in case you missed this   Ohhhh
+What          https   youtu be MiKeF1YUKz4          https   edition cnn com
+interactive 2021 03 cnnix steership  s 09 What if she says yes to April fool me
+uno reverse        https   twitter com Ozkok\_A status 1377916653846036480 s 08
+1      https   youtu be nW948Va l10  918668611629 tu bhi dekh le Vaccine bhetla
+ka tula  Kal 47k the   Now who told you that  Fake news  Haha scandinavia is the
+best    thand bohot hoti hai udhar    nope they aren t even part of European
+union because they didn t want people from Europe    paani ke neeche jane wala
+hai woh jaldi hi    fun fact inke problems bolna shuru karu kya   yeh hui na
+baat    chalo ayodya   arey if you have money good choice  chalega thode racist
+log hai    with brances in multiple countries    yeh bhi thik hai
+JavaScript ftw      April fools wala video hai yeh                     Sab ke
+squad dekh ke bolta hu      DC     Really    SRH Tu bhi RCB       Wow  https
+vimeo com 272624653     https   youtu be UgW\_PhNHq0g COBOL code tha       Pune
+She won t die until prince Charles dies    E saala cup namde Aaj grp itna active
+kyun hai 4th episode dekha  That last scene  nahi re       and  GST        Happy
+Birthday Ritu    KT Knowledge Transfer                   Athrya ka tweet dekha
+kya tune bhi  https   youtu be Jd2GK0qDtRg Nope Happy Gudi Padwa   Abhi uddhav
+uncle ka speech hai 8 30 ko Woh announce karega      idk   Imagine a potential
+employer checking their linkedin profile and finds this        https   youtu be
+YY1Db opAvo        jai pappu             Abtak chalu hai      Add me then
+Yesss    Dramatic ending honi chahiye           Too depressing   Yupp i know
+And everyone on twitter is begging for beds oxygen ventilator  https   www
+moneycontrol com news coronavirus govt to open up vaccination for everyone above
+18 from may 1 6789221 html Nope Did you hear about the doctor father son duo
+from kalyan who died because they couldn t get a bed     This reminded me of
+family guy nike commercial   https   youtu be T2w5SQ0L65I Wow And a cool
+coincidence   https   youtu be IdKm5lBb2ek This message was deleted    It s
+sending the msg in wrong chats     This message was deleted Anyone here knows
+selenium  Ha And also can be used to control your browser  Jai Shree Ram
+Noice    1 I feel their pain   Konsa   waah my prediction I m not paying
+attention on that    Politics chalu hai bass Mereko vijay malya laga   Nope Aise
+bolbe pe kuch yaad nahi aata muze  bolne Ha   Thanks idk haven t talked to her
+in a while   Delhi  Ha yeh karna padega          https   youtu be WQ5kfsVsNZE
+https   youtu be Onu844IhbEM And hospitals are warned not to raise oxygen
+shortage alarms     Sir West Bengal ki positivity rate is around 50  from last
+two days    kolkata  maha is not the lowest in vaccine wastage Yupp
+Guys   pink moon dekho bahar jake           Oooooooo doesn t google assistant
+read it out    noice    Prediction Kisi ne register kiya     Happy Birthday
+Shreekant   Wow         Both are Rajesh     big bang theory reference
+918379946202  919130526155  919049792879 join duo pe Kon  yeh chal kya raha hai
+Weekend aa gaya Post work doomscrolling    Nah Uhm what    Woh fridge mast foda
+lekin              Didi O didi Left   congress in WB   0 1 Really remarkable
+victory for Didi tho    https   youtu be iKcWu0tsiZM Woh golden bridge wale mein
+sab hai Shayad Yeh msg sabka aaya hai kya  In sabko beard toh hai kya  https
+twitter com schmmuck status 1388874454810316804 s 20    Nope Kidhar  Btw goa
+pics bheje kya  Kuch bhi mat bhejo  Yeh mast hai    Wow      Aaj hi bharna aisa
+kuch hai kya  Official pe msg aya tha usmein 10th may tak bharo likha tha
+Mera quote     Nothing goes over my head     May the fourth be with you
+Kangana ka twitter account suspended    IPL suspended  mera username kisne bola
+inhe      mast hai       Sach mein        What poll          https   youtu be
+XDhyNbR6v1w          https   youtu be Zo62S0ulqhA             Enlighten me  War
+chalu hai  Much more complex that    Watch this    I m still here
+Nope Covid recovered logonko hota hai   esp the one s with diabetes        Yeh
+kya delete kardiya tune    Bhej   Noice       Chand pe aapka swagat hai
+Freelance    Vaccine liya      Nah Police ka danda padega ab Right https   youtu
+be FOz\_NEr0aeY I m trying to track down who leaked my data  Do you guys get
+messages from Aam Aadmi Party  Ha  More specifically Fun fact  Another one
+Because you re a 90s kid       I was curious  https   youtu be wDP2c2FCHAM India
+mein banned hai na  Abhi nahi kiya   2018 mein rbi banned it   And i am dumb
+enough to search bitcoin on stocks wale apps and when i didn t find it
+That image ruined my day    Tere pass prime tha na     https   twitter com levie
+status 1401293288942891009 s 20 Loki ep1 dekha kisine  Link hai toh bhejo  https
+youtu be J2ACJkafELA  '
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \subsection{Most used words by user(excluding
+emojis)}\label{most-used-words-by-userexcluding-emojis}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{17}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+    \PY{n}{fg} \PY{o}{=} \PY{n}{itemfreq}\PY{p}{(}\PY{n+nb}{list}\PY{p}{(}\PY{n}{chats\PYZus{}person\PYZus{}only\PYZus{}text}\PY{p}{)}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ }\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}
+    \PY{n}{fg} \PY{o}{=} \PY{n}{fg}\PY{p}{[}\PY{n}{fg}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{n+nb}{float}\PY{p}{)}\PY{o}{.}\PY{n}{argsort}\PY{p}{(}\PY{p}{)}\PY{p}{]}\PY{p}{[}\PY{p}{:}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+    \PY{n+nb}{print}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,}\PY{n}{fg}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{:}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/home/rudviq/.local/lib/python3.6/site-packages/ipykernel\_launcher.py:2:
+DeprecationWarning: `itemfreq` is deprecated!
+`itemfreq` is deprecated and will be removed in a future version. Use instead
+`np.unique({\ldots}, return\_counts=True)`
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Vamshikiran [['hai' '567']
+ ['I' '226']
+ ['kya' '187']]
+Rushikesh N [['hai' '961']
+ ['to' '346']
+ ['I' '288']]
+Ritesh [['hai' '1256']
+ ['to' '759']
+ ['me' '471']]
+Rudviq [['hai' '1842']
+ ['me' '592']
+ ['nhi' '587']]
+Shrikant Karhale [['hai' '1407']
+ ['nh' '422']
+ ['kya' '391']]
+Atharva Puranik [['hai' '283']
+ ['h' '156']
+ ['nhi' '146']]
+Suraj Rao [['hai' '266']
+ ['nahi' '119']
+ ['me' '118']]
+Gaurav Warad [['hai' '321']
+ ['https' '78']
+ ['kya' '74']]
+    \end{Verbatim}
+
+    \subsection{Bar graph to represent Number of texts by each
+user}\label{bar-graph-to-represent-number-of-texts-by-each-user}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{62}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} fig,ax = plt.subplots()}
+
+
+\PY{c+c1}{\PYZsh{} y\PYZus{}pos = np.arange(len(user\PYZus{}list))}
+
+\PY{c+c1}{\PYZsh{} ax.barh(y\PYZus{}pos,tot\PYZus{}no\PYZus{}text,align = \PYZsq{}center\PYZsq{})}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}yticks(y\PYZus{}pos)}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}yticklabels(user\PYZus{}list)}
+\PY{c+c1}{\PYZsh{} \PYZsh{} ax.set\PYZus{}xticks(y)}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}title(\PYZdq{}Number of texts per person\PYZdq{})}
+\PY{c+c1}{\PYZsh{} ax.invert\PYZus{}yaxis()}
+\PY{n}{plotGraph}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{,}\PY{n}{tot\PYZus{}no\PYZus{}text}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Number of text per person}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{WhatsappChatAnalyzer_Final_files/WhatsappChatAnalyzer_Final_33_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsection{Number of emojis used per
+person}\label{number-of-emojis-used-per-person}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{19}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{emoji}
+
+\PY{n}{no\PYZus{}of\PYZus{}emoji}\PY{o}{=}\PY{p}{[}\PY{p}{]}
+\PY{n}{emojis\PYZus{}iter} \PY{o}{=} \PY{n+nb}{map}\PY{p}{(}\PY{k}{lambda} \PY{n}{y}\PY{p}{:} \PY{n}{y}\PY{p}{,} \PY{n}{emoji}\PY{o}{.}\PY{n}{UNICODE\PYZus{}EMOJI}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{en}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{keys}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\PY{n}{regex\PYZus{}set} \PY{o}{=} \PY{n}{re}\PY{o}{.}\PY{n}{compile}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{|}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{join}\PY{p}{(}\PY{n}{re}\PY{o}{.}\PY{n}{escape}\PY{p}{(}\PY{n}{em}\PY{p}{)} \PY{k}{for} \PY{n}{em} \PY{o+ow}{in} \PY{n}{emojis\PYZus{}iter}\PY{p}{)}\PY{p}{)}
+
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+    \PY{n}{new\PYZus{}list} \PY{o}{=} \PY{n}{regex\PYZus{}set}\PY{o}{.}\PY{n}{findall}\PY{p}{(}\PY{n}{chats\PYZus{}per\PYZus{}person\PYZus{}wo}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)} 
+    \PY{n}{no\PYZus{}of\PYZus{}emoji}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{new\PYZus{}list}\PY{p}{)}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} no\PYZus{}of\PYZus{}emoji}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{63}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} fig,ax = plt.subplots()}
+
+
+\PY{c+c1}{\PYZsh{} y\PYZus{}pos = np.arange(len(user\PYZus{}list))}
+
+\PY{c+c1}{\PYZsh{} ax.barh(y\PYZus{}pos,no\PYZus{}of\PYZus{}emoji,align = \PYZsq{}center\PYZsq{})}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}yticks(y\PYZus{}pos)}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}yticklabels(user\PYZus{}list)}
+\PY{c+c1}{\PYZsh{} \PYZsh{} ax.set\PYZus{}xticks(y)}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}title(\PYZdq{}Number of emojis per person\PYZdq{})}
+\PY{c+c1}{\PYZsh{} ax.invert\PYZus{}yaxis()}
+
+\PY{n}{plotGraph}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{,}\PY{n}{no\PYZus{}of\PYZus{}emoji}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Number of emojis per person}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{WhatsappChatAnalyzer_Final_files/WhatsappChatAnalyzer_Final_36_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsection{Number of words per user}\label{number-of-words-per-user}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{21}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{no\PYZus{}of\PYZus{}words} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+    \PY{n}{N}\PY{o}{=} \PY{n}{chats\PYZus{}per\PYZus{}person\PYZus{}wo}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ }\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{no\PYZus{}of\PYZus{}words}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{N}\PY{p}{)}\PY{p}{)}
+    
+\PY{c+c1}{\PYZsh{} no\PYZus{}of\PYZus{}words    }
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{64}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} fig,ax = plt.subplots()}
+
+
+\PY{c+c1}{\PYZsh{} y\PYZus{}pos = np.arange(len(user\PYZus{}list))}
+
+\PY{c+c1}{\PYZsh{} ax.barh(y\PYZus{}pos,no\PYZus{}of\PYZus{}words,align = \PYZsq{}center\PYZsq{})}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}yticks(y\PYZus{}pos)}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}yticklabels(user\PYZus{}list)}
+\PY{c+c1}{\PYZsh{} \PYZsh{} ax.set\PYZus{}xticks(y)}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}title(\PYZdq{}Number of words per person\PYZdq{})}
+\PY{c+c1}{\PYZsh{} ax.invert\PYZus{}yaxis()}
+
+\PY{n}{plotGraph}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{,}\PY{n}{no\PYZus{}of\PYZus{}words}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Number of words per person}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{WhatsappChatAnalyzer_Final_files/WhatsappChatAnalyzer_Final_39_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{23}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{len}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Whatsapp Chats}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZlt{}Media omitted\PYZgt{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{==}\PY{k+kc}{True}\PY{p}{]}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Users}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{==}\PY{n}{user\PYZus{}list}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/home/rudviq/.local/lib/python3.6/site-packages/ipykernel\_launcher.py:1:
+UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+  """Entry point for launching an IPython kernel.
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{23}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+455
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \subsection{Number of media files sent per
+user}\label{number-of-media-files-sent-per-user}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{24}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{no\PYZus{}of\PYZus{}media} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+    \PY{n}{l}\PY{o}{=}\PY{n+nb}{len}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Whatsapp Chats}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZlt{}Media omitted\PYZgt{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{==}\PY{k+kc}{True}\PY{p}{]}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Users}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{==}\PY{n}{user\PYZus{}list}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+    \PY{n}{no\PYZus{}of\PYZus{}media}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{l}\PY{p}{)}
+    
+\PY{n}{no\PYZus{}of\PYZus{}media}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/home/rudviq/.local/lib/python3.6/site-packages/ipykernel\_launcher.py:4:
+UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+  after removing the cwd from sys.path.
+/home/rudviq/.local/lib/python3.6/site-packages/ipykernel\_launcher.py:4:
+UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+  after removing the cwd from sys.path.
+/home/rudviq/.local/lib/python3.6/site-packages/ipykernel\_launcher.py:4:
+UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+  after removing the cwd from sys.path.
+/home/rudviq/.local/lib/python3.6/site-packages/ipykernel\_launcher.py:4:
+UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+  after removing the cwd from sys.path.
+/home/rudviq/.local/lib/python3.6/site-packages/ipykernel\_launcher.py:4:
+UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+  after removing the cwd from sys.path.
+/home/rudviq/.local/lib/python3.6/site-packages/ipykernel\_launcher.py:4:
+UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+  after removing the cwd from sys.path.
+/home/rudviq/.local/lib/python3.6/site-packages/ipykernel\_launcher.py:4:
+UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+  after removing the cwd from sys.path.
+/home/rudviq/.local/lib/python3.6/site-packages/ipykernel\_launcher.py:4:
+UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+  after removing the cwd from sys.path.
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{24}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+[166, 512, 455, 443, 1300, 286, 143, 198]
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{65}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} fig,ax = plt.subplots()}
+
+
+\PY{c+c1}{\PYZsh{} y\PYZus{}pos = np.arange(len(user\PYZus{}list))}
+
+\PY{c+c1}{\PYZsh{} ax.barh(y\PYZus{}pos,no\PYZus{}of\PYZus{}media,align = \PYZsq{}center\PYZsq{})}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}yticks(y\PYZus{}pos)}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}yticklabels(user\PYZus{}list)}
+\PY{c+c1}{\PYZsh{} \PYZsh{} ax.set\PYZus{}xticks(y)}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}title(\PYZdq{}Number of media files sent per person\PYZdq{})}
+\PY{c+c1}{\PYZsh{} ax.invert\PYZus{}yaxis()}
+
+\PY{n}{plotGraph}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{,}\PY{n}{no\PYZus{}of\PYZus{}media}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Number of media files sent per person}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{WhatsappChatAnalyzer_Final_files/WhatsappChatAnalyzer_Final_43_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsection{Average number of words per message per
+contact}\label{average-number-of-words-per-message-per-contact}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{26}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}Avg no of words per message per contact including media}
+
+\PY{n}{avg\PYZus{}words} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+    \PY{n}{avg\PYZus{}words}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{no\PYZus{}of\PYZus{}words}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{o}{/}\PY{n}{most\PYZus{}msg\PYZus{}by\PYZus{}user\PYZus{}wo}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}
+    
+
+\PY{n}{avg\PYZus{}words}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{26}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+[3.959954751131222,
+ 4.790870667793745,
+ 6.653610354223433,
+ 4.400929345883474,
+ 8.613363937770977,
+ 5.350899742930591,
+ 3.3273504273504275,
+ 3.373729158194388]
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{66}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} fig,ax = plt.subplots()}
+
+
+\PY{c+c1}{\PYZsh{} y\PYZus{}pos = np.arange(len(user\PYZus{}list))}
+
+\PY{c+c1}{\PYZsh{} ax.barh(y\PYZus{}pos,avg\PYZus{}words,align = \PYZsq{}center\PYZsq{})}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}yticks(y\PYZus{}pos)}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}yticklabels(user\PYZus{}list)}
+\PY{c+c1}{\PYZsh{} \PYZsh{} ax.set\PYZus{}xticks(y)}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}title(\PYZdq{}Number of words per messages per contact\PYZdq{})}
+\PY{c+c1}{\PYZsh{} ax.invert\PYZus{}yaxis()}
+
+\PY{n}{plotGraph}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{,}\PY{n}{avg\PYZus{}words}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Number of words per messages per contact}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{WhatsappChatAnalyzer_Final_files/WhatsappChatAnalyzer_Final_46_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsection{Summary}\label{summary}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{28}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{datetime}
+\PY{k+kn}{import} \PY{n+nn}{time}
+
+\PY{n}{date\PYZus{}list} \PY{o}{=}\PY{p}{[}\PY{p}{]}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Date}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+    \PY{n}{date\PYZus{}list}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{datetime}\PY{o}{.}\PY{n}{datetime}\PY{o}{.}\PY{n}{strptime}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Date}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{/}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{m/}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{Y}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{o}{.}\PY{n}{strftime}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{/}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{m/}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{Y}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{)}
+    
+    
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{29}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{Start\PYZus{}date} \PY{o}{=} \PY{n}{date\PYZus{}list}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+\PY{n}{End\PYZus{}date}\PY{o}{=}\PY{n}{date\PYZus{}list}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{Start\PYZus{}date}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{  }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{End\PYZus{}date}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+21/03/2020    11/06/2021
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{30}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{Start\PYZus{}time} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Time}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+\PY{n}{End\PYZus{}time} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Time}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{[}\PY{n+nb}{len}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Time}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{Start\PYZus{}time}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{  }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{End\PYZus{}time}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+18:54    12:54
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{31}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{Total\PYZus{}msg}\PY{o}{=}\PY{l+m+mi}{0}
+\PY{n}{Total\PYZus{}text}\PY{o}{=}\PY{l+m+mi}{0}
+\PY{n}{Total\PYZus{}media}\PY{o}{=}\PY{l+m+mi}{0}
+\PY{n}{Total\PYZus{}words} \PY{o}{=} \PY{l+m+mi}{0}
+\PY{n}{Total\PYZus{}emoji}\PY{o}{=}\PY{l+m+mi}{0}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{8}\PY{p}{)}\PY{p}{:}
+    \PY{n}{Total\PYZus{}msg} \PY{o}{+}\PY{o}{=} \PY{n}{most\PYZus{}msg\PYZus{}by\PYZus{}user}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+    \PY{n}{Total\PYZus{}text} \PY{o}{+}\PY{o}{=} \PY{n}{tot\PYZus{}no\PYZus{}text}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+    \PY{n}{Total\PYZus{}media} \PY{o}{+}\PY{o}{=} \PY{n}{no\PYZus{}of\PYZus{}media}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+    \PY{n}{Total\PYZus{}words} \PY{o}{+}\PY{o}{=} \PY{n}{no\PYZus{}of\PYZus{}words}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+    \PY{n}{Total\PYZus{}emoji} \PY{o}{+}\PY{o}{=} \PY{n}{no\PYZus{}of\PYZus{}emoji}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+    
+    
+\PY{c+c1}{\PYZsh{} sum}
+\PY{c+c1}{\PYZsh{} sum1}
+\PY{c+c1}{\PYZsh{} \PYZsh{} sum2}
+\PY{c+c1}{\PYZsh{} sum3}
+\PY{c+c1}{\PYZsh{} sum4}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Total messages: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{Total\PYZus{}msg}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Total no of letters: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{Total\PYZus{}text}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Total files(media): }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{Total\PYZus{}media}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Total words: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{Total\PYZus{}words}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Total emojis: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{Total\PYZus{}emoji}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Total messages:  39935
+Total no of letters:  766035
+Total files(media):  3503
+Total words:  188355
+Total emojis:  24096
+    \end{Verbatim}
+
+    \subsection{Time wise Statistical
+data}\label{time-wise-statistical-data}
+
+    \subsubsection{Date on which most chatting was
+done}\label{date-on-which-most-chatting-was-done}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{32}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{most\PYZus{}msg\PYZus{}date} \PY{o}{=} \PY{n}{itemfreq}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Date}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{n}{most\PYZus{}msg\PYZus{}date} \PY{o}{=} \PY{n}{most\PYZus{}msg\PYZus{}date}\PY{p}{[}\PY{n}{most\PYZus{}msg\PYZus{}date}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{argsort}\PY{p}{(}\PY{p}{)}\PY{p}{]}\PY{p}{[}\PY{p}{:}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+\PY{n}{most\PYZus{}msg\PYZus{}date}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/home/rudviq/.local/lib/python3.6/site-packages/ipykernel\_launcher.py:1:
+DeprecationWarning: `itemfreq` is deprecated!
+`itemfreq` is deprecated and will be removed in a future version. Use instead
+`np.unique({\ldots}, return\_counts=True)`
+  """Entry point for launching an IPython kernel.
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{32}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+array([['28/03/2020', 808],
+       ['20/10/2020', 684],
+       ['01/04/2020', 577],
+       ['24/03/2020', 572],
+       ['29/03/2020', 526],
+       ['10/11/2020', 524],
+       ['23/03/2020', 493],
+       ['09/10/2020', 491],
+       ['28/04/2020', 459],
+       ['31/05/2020', 458],
+       ['02/04/2020', 458],
+       ['21/04/2020', 457],
+       ['27/03/2020', 456],
+       ['01/06/2020', 449],
+       ['01/11/2020', 446],
+       ['30/05/2020', 441],
+       ['12/11/2020', 437],
+       ['15/10/2020', 429],
+       ['22/03/2020', 429],
+       ['19/05/2020', 424],
+       ['25/03/2020', 414],
+       ['29/06/2020', 374],
+       ['03/12/2020', 362],
+       ['17/06/2020', 348],
+       ['08/10/2020', 343],
+       ['12/10/2020', 334],
+       ['26/10/2020', 332],
+       ['26/03/2021', 323],
+       ['16/04/2020', 319],
+       ['30/10/2020', 316],
+       ['05/05/2020', 312],
+       ['12/09/2020', 307],
+       ['30/03/2020', 301],
+       ['12/07/2020', 273],
+       ['16/10/2020', 263],
+       ['01/05/2020', 255],
+       ['23/09/2020', 251],
+       ['03/06/2020', 251],
+       ['26/04/2020', 248],
+       ['23/10/2020', 246],
+       ['18/10/2020', 237],
+       ['27/04/2020', 234],
+       ['07/06/2020', 233],
+       ['25/04/2021', 223],
+       ['19/06/2020', 223],
+       ['09/12/2020', 218],
+       ['08/11/2020', 215],
+       ['02/05/2021', 214],
+       ['15/11/2020', 213],
+       ['14/04/2020', 206],
+       ['05/03/2021', 204],
+       ['28/07/2020', 204],
+       ['24/11/2020', 203],
+       ['08/05/2020', 202],
+       ['29/04/2020', 201],
+       ['19/10/2020', 198],
+       ['12/04/2021', 194],
+       ['22/03/2021', 194],
+       ['11/06/2020', 194],
+       ['04/11/2020', 193],
+       ['02/11/2020', 192],
+       ['22/04/2020', 192],
+       ['02/06/2020', 188],
+       ['18/04/2020', 187],
+       ['09/11/2020', 186],
+       ['14/06/2020', 179],
+       ['15/06/2020', 178],
+       ['13/04/2020', 175],
+       ['10/04/2021', 175],
+       ['12/04/2020', 172],
+       ['06/04/2021', 172],
+       ['25/06/2020', 169],
+       ['24/10/2020', 168],
+       ['13/05/2021', 168],
+       ['17/10/2020', 164],
+       ['28/10/2020', 164],
+       ['29/05/2020', 162],
+       ['13/10/2020', 157],
+       ['04/12/2020', 154],
+       ['17/04/2020', 153],
+       ['22/10/2020', 152],
+       ['07/05/2021', 152],
+       ['27/06/2020', 150],
+       ['06/02/2021', 150],
+       ['12/05/2020', 150],
+       ['23/07/2020', 147],
+       ['14/05/2020', 147],
+       ['11/10/2020', 147],
+       ['25/07/2020', 146],
+       ['05/05/2021', 144],
+       ['18/06/2020', 142],
+       ['04/06/2020', 141],
+       ['11/09/2020', 138],
+       ['31/03/2020', 138],
+       ['20/06/2020', 137],
+       ['30/06/2020', 136],
+       ['21/06/2020', 135],
+       ['04/05/2020', 133],
+       ['18/03/2021', 131],
+       ['05/04/2020', 131],
+       ['08/06/2020', 130],
+       ['27/04/2021', 129],
+       ['08/03/2021', 128],
+       ['24/01/2021', 128],
+       ['14/12/2020', 127],
+       ['27/05/2020', 125],
+       ['09/06/2020', 124],
+       ['18/11/2020', 124],
+       ['23/06/2020', 123],
+       ['15/02/2021', 122],
+       ['09/04/2021', 118],
+       ['02/12/2020', 117],
+       ['22/01/2021', 117],
+       ['09/03/2021', 114],
+       ['23/04/2020', 113],
+       ['24/07/2020', 111],
+       ['10/06/2020', 107],
+       ['14/10/2020', 106],
+       ['26/07/2020', 106],
+       ['19/03/2021', 105],
+       ['11/04/2020', 104],
+       ['08/05/2021', 103],
+       ['09/04/2020', 103],
+       ['05/06/2020', 102],
+       ['10/04/2020', 102],
+       ['26/12/2020', 101],
+       ['27/07/2020', 100],
+       ['15/12/2020', 100],
+       ['01/10/2020', 99],
+       ['03/05/2021', 99],
+       ['10/10/2020', 98],
+       ['23/04/2021', 97],
+       ['08/04/2021', 96],
+       ['25/09/2020', 95],
+       ['19/04/2020', 94],
+       ['26/01/2021', 94],
+       ['20/04/2020', 94],
+       ['24/04/2021', 93],
+       ['01/12/2020', 93],
+       ['06/11/2020', 92],
+       ['29/10/2020', 90],
+       ['28/11/2020', 89],
+       ['08/04/2020', 87],
+       ['12/01/2021', 85],
+       ['06/03/2021', 85],
+       ['10/12/2020', 84],
+       ['21/01/2021', 83],
+       ['15/08/2020', 83],
+       ['04/05/2021', 83],
+       ['22/06/2020', 82],
+       ['18/01/2021', 81],
+       ['25/05/2020', 81],
+       ['16/01/2021', 81],
+       ['30/04/2021', 80],
+       ['19/04/2021', 78],
+       ['13/07/2020', 78],
+       ['09/05/2021', 78],
+       ['18/05/2020', 77],
+       ['11/02/2021', 76],
+       ['19/11/2020', 76],
+       ['21/05/2021', 76],
+       ['31/07/2020', 75],
+       ['21/12/2020', 75],
+       ['16/06/2020', 73],
+       ['26/03/2020', 73],
+       ['22/07/2020', 73],
+       ['16/05/2021', 73],
+       ['03/11/2020', 73],
+       ['04/10/2020', 72],
+       ['31/12/2020', 71],
+       ['16/11/2020', 70],
+       ['31/08/2020', 69],
+       ['04/04/2020', 69],
+       ['11/11/2020', 68],
+       ['03/07/2020', 68],
+       ['24/06/2020', 67],
+       ['02/05/2020', 66],
+       ['23/05/2021', 66],
+       ['15/04/2020', 65],
+       ['07/01/2021', 65],
+       ['17/05/2021', 64],
+       ['18/05/2021', 64],
+       ['10/07/2020', 63],
+       ['20/05/2020', 63],
+       ['04/09/2020', 63],
+       ['25/01/2021', 62],
+       ['02/06/2021', 62],
+       ['19/02/2021', 59],
+       ['24/04/2020', 58],
+       ['23/01/2021', 57],
+       ['17/04/2021', 57],
+       ['15/03/2021', 57],
+       ['15/09/2020', 57],
+       ['24/03/2021', 56],
+       ['25/04/2020', 55],
+       ['21/05/2020', 55],
+       ['22/05/2021', 55],
+       ['04/02/2021', 54],
+       ['04/07/2020', 54],
+       ['29/04/2021', 54],
+       ['17/01/2021', 53],
+       ['18/04/2021', 53],
+       ['22/04/2021', 52],
+       ['16/02/2021', 52],
+       ['06/05/2020', 52],
+       ['05/11/2020', 52],
+       ['17/07/2020', 51],
+       ['11/04/2021', 51],
+       ['14/08/2020', 50],
+       ['07/04/2021', 50],
+       ['13/12/2020', 50],
+       ['20/05/2021', 50],
+       ['05/04/2021', 49],
+       ['20/11/2020', 48],
+       ['17/05/2020', 47],
+       ['15/01/2021', 47],
+       ['24/12/2020', 46],
+       ['29/03/2021', 46],
+       ['24/05/2021', 45],
+       ['08/12/2020', 45],
+       ['30/01/2021', 44],
+       ['05/07/2020', 44],
+       ['22/05/2020', 44],
+       ['16/05/2020', 44],
+       ['04/04/2021', 44],
+       ['18/02/2021', 43],
+       ['10/09/2020', 43],
+       ['05/02/2021', 43],
+       ['11/07/2020', 43],
+       ['23/05/2020', 42],
+       ['25/11/2020', 42],
+       ['28/05/2020', 41],
+       ['11/05/2021', 40],
+       ['27/03/2021', 40],
+       ['19/09/2020', 39],
+       ['09/05/2020', 39],
+       ['21/03/2020', 38],
+       ['03/03/2021', 38],
+       ['28/02/2021', 38],
+       ['18/08/2020', 37],
+       ['01/05/2021', 37],
+       ['26/05/2020', 37],
+       ['27/05/2021', 36],
+       ['29/11/2020', 36],
+       ['21/07/2020', 36],
+       ['17/08/2020', 35],
+       ['03/05/2020', 34],
+       ['10/05/2020', 34],
+       ['20/04/2021', 34],
+       ['10/06/2021', 34],
+       ['18/12/2020', 34],
+       ['07/04/2020', 33],
+       ['12/05/2021', 32],
+       ['25/10/2020', 32],
+       ['09/02/2021', 32],
+       ['07/03/2021', 32],
+       ['05/08/2020', 32],
+       ['17/03/2021', 31],
+       ['08/07/2020', 31],
+       ['13/04/2021', 30],
+       ['11/03/2021', 30],
+       ['14/04/2021', 30],
+       ['15/05/2021', 29],
+       ['29/12/2020', 29],
+       ['20/03/2021', 29],
+       ['22/02/2021', 28],
+       ['25/02/2021', 28],
+       ['23/03/2021', 28],
+       ['31/10/2020', 28],
+       ['06/06/2020', 27],
+       ['28/06/2020', 27],
+       ['31/05/2021', 27],
+       ['22/11/2020', 27],
+       ['15/05/2020', 27],
+       ['06/04/2020', 26],
+       ['30/04/2020', 26],
+       ['15/04/2021', 26],
+       ['12/08/2020', 26],
+       ['10/01/2021', 26],
+       ['21/11/2020', 25],
+       ['26/02/2021', 25],
+       ['20/01/2021', 25],
+       ['03/04/2021', 24],
+       ['07/12/2020', 24],
+       ['04/03/2021', 23],
+       ['12/06/2020', 23],
+       ['05/01/2021', 23],
+       ['28/01/2021', 23],
+       ['14/05/2021', 23],
+       ['30/07/2020', 23],
+       ['22/09/2020', 22],
+       ['20/07/2020', 22],
+       ['01/02/2021', 22],
+       ['13/08/2020', 22],
+       ['02/07/2020', 22],
+       ['10/05/2021', 22],
+       ['06/01/2021', 21],
+       ['03/04/2020', 21],
+       ['14/07/2020', 21],
+       ['16/04/2021', 21],
+       ['27/10/2020', 21],
+       ['28/03/2021', 21],
+       ['01/08/2020', 20],
+       ['13/11/2020', 20],
+       ['03/06/2021', 20],
+       ['26/04/2021', 20],
+       ['28/04/2021', 20],
+       ['02/09/2020', 19],
+       ['01/01/2021', 19],
+       ['13/05/2020', 19],
+       ['04/06/2021', 18],
+       ['19/07/2020', 18],
+       ['14/02/2021', 18],
+       ['16/09/2020', 18],
+       ['27/11/2020', 17],
+       ['31/01/2021', 17],
+       ['14/09/2020', 17],
+       ['06/12/2020', 17],
+       ['29/09/2020', 17],
+       ['31/03/2021', 17],
+       ['14/11/2020', 16],
+       ['25/12/2020', 16],
+       ['19/12/2020', 16],
+       ['28/05/2021', 16],
+       ['01/04/2021', 15],
+       ['16/03/2021', 15],
+       ['18/07/2020', 15],
+       ['11/05/2020', 15],
+       ['11/01/2021', 15],
+       ['22/12/2020', 15],
+       ['17/12/2020', 14],
+       ['02/04/2021', 14],
+       ['02/02/2021', 14],
+       ['17/09/2020', 14],
+       ['01/07/2020', 14],
+       ['03/09/2020', 14],
+       ['23/12/2020', 14],
+       ['20/02/2021', 13],
+       ['24/02/2021', 13],
+       ['13/09/2020', 13],
+       ['16/12/2020', 13],
+       ['26/09/2020', 13],
+       ['30/03/2021', 13],
+       ['21/03/2021', 12],
+       ['07/11/2020', 12],
+       ['15/07/2020', 12],
+       ['25/05/2021', 12],
+       ['05/06/2021', 12],
+       ['21/04/2021', 11],
+       ['01/06/2021', 11],
+       ['10/03/2021', 11],
+       ['26/11/2020', 10],
+       ['02/10/2020', 10],
+       ['29/01/2021', 10],
+       ['09/06/2021', 10],
+       ['14/01/2021', 10],
+       ['27/09/2020', 9],
+       ['06/09/2020', 9],
+       ['13/06/2020', 9],
+       ['30/05/2021', 9],
+       ['27/01/2021', 9],
+       ['07/08/2020', 9],
+       ['07/07/2020', 9],
+       ['12/02/2021', 9],
+       ['05/12/2020', 9],
+       ['06/07/2020', 8],
+       ['19/05/2021', 8],
+       ['03/02/2021', 8],
+       ['08/02/2021', 8],
+       ['24/09/2020', 8],
+       ['24/05/2020', 8],
+       ['01/03/2021', 7],
+       ['27/12/2020', 7],
+       ['12/03/2021', 7],
+       ['28/08/2020', 7],
+       ['13/01/2021', 6],
+       ['12/12/2020', 6],
+       ['11/12/2020', 6],
+       ['02/01/2021', 6],
+       ['17/02/2021', 6],
+       ['23/11/2020', 6],
+       ['10/08/2020', 6],
+       ['05/10/2020', 6],
+       ['18/09/2020', 6],
+       ['20/09/2020', 6],
+       ['30/08/2020', 6],
+       ['06/05/2021', 5],
+       ['09/08/2020', 5],
+       ['06/06/2021', 5],
+       ['03/01/2021', 5],
+       ['11/08/2020', 5],
+       ['07/05/2020', 5],
+       ['04/01/2021', 5],
+       ['02/03/2021', 4],
+       ['11/06/2021', 4],
+       ['01/09/2020', 4],
+       ['07/09/2020', 4],
+       ['22/08/2020', 4],
+       ['24/08/2020', 4],
+       ['06/10/2020', 4],
+       ['26/06/2020', 4],
+       ['08/09/2020', 4],
+       ['13/02/2021', 4],
+       ['13/03/2021', 4],
+       ['28/09/2020', 4],
+       ['08/08/2020', 3],
+       ['29/07/2020', 3],
+       ['30/11/2020', 3],
+       ['26/05/2021', 3],
+       ['20/12/2020', 3],
+       ['16/08/2020', 3],
+       ['07/10/2020', 3],
+       ['09/07/2020', 3],
+       ['21/10/2020', 3],
+       ['29/05/2021', 2],
+       ['16/07/2020', 2],
+       ['19/08/2020', 2],
+       ['09/09/2020', 2],
+       ['21/02/2021', 2],
+       ['02/08/2020', 2],
+       ['23/08/2020', 2],
+       ['25/03/2021', 2],
+       ['03/08/2020', 2],
+       ['04/08/2020', 2],
+       ['23/02/2021', 1],
+       ['29/08/2020', 1],
+       ['20/08/2020', 1],
+       ['30/12/2020', 1],
+       ['10/02/2021', 1],
+       ['08/01/2021', 1],
+       ['27/02/2021', 1]], dtype=object)
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{68}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{fig}\PY{p}{,}\PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
+
+
+\PY{n}{y\PYZus{}pos} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
+
+\PY{n}{ax}\PY{o}{.}\PY{n}{barh}\PY{p}{(}\PY{n}{y\PYZus{}pos}\PY{p}{,}\PY{n}{most\PYZus{}msg\PYZus{}date}\PY{p}{[}\PY{p}{:}\PY{l+m+mi}{10}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{align} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}yticks}\PY{p}{(}\PY{n}{y\PYZus{}pos}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}yticklabels}\PY{p}{(}\PY{n}{most\PYZus{}msg\PYZus{}date}\PY{p}{[}\PY{p}{:}\PY{l+m+mi}{10}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}xticks(y)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Frequency of chats on different dates}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{invert\PYZus{}yaxis}\PY{p}{(}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} plotGraph(10,most\PYZus{}msg\PYZus{}date[:10,1],\PYZsq{}Fre\PYZsq{})}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{WhatsappChatAnalyzer_Final_files/WhatsappChatAnalyzer_Final_55_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsubsection{Time when mostly chatting is
+done}\label{time-when-mostly-chatting-is-done}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{34}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{most\PYZus{}msg\PYZus{}time} \PY{o}{=} \PY{n}{itemfreq}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Time}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} df[\PYZsq{}Time\PYZsq{}]= df[\PYZsq{}Time\PYZsq{}][df[\PYZsq{}Time\PYZsq{}][:,1].argsort()][::\PYZhy{}1]}
+\PY{n}{most\PYZus{}msg\PYZus{}time} \PY{o}{=} \PY{n}{most\PYZus{}msg\PYZus{}time}\PY{p}{[}\PY{n}{most\PYZus{}msg\PYZus{}time}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{argsort}\PY{p}{(}\PY{p}{)}\PY{p}{]}\PY{p}{[}\PY{p}{:}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+\PY{n}{most\PYZus{}msg\PYZus{}time}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/home/rudviq/.local/lib/python3.6/site-packages/ipykernel\_launcher.py:1:
+DeprecationWarning: `itemfreq` is deprecated!
+`itemfreq` is deprecated and will be removed in a future version. Use instead
+`np.unique({\ldots}, return\_counts=True)`
+  """Entry point for launching an IPython kernel.
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{34}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+array([['22:26', 96],
+       ['22:25', 95],
+       ['22:14', 92],
+       {\ldots},
+       ['05:09', 1],
+       ['05:02', 1],
+       ['02:45', 1]], dtype=object)
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{35}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{fig}\PY{p}{,}\PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
+
+
+\PY{n}{y\PYZus{}pos} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
+
+\PY{n}{ax}\PY{o}{.}\PY{n}{barh}\PY{p}{(}\PY{n}{y\PYZus{}pos}\PY{p}{,}\PY{n}{most\PYZus{}msg\PYZus{}time}\PY{p}{[}\PY{p}{:}\PY{l+m+mi}{10}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{align} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}yticks}\PY{p}{(}\PY{n}{y\PYZus{}pos}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}yticklabels}\PY{p}{(}\PY{n}{most\PYZus{}msg\PYZus{}time}\PY{p}{[}\PY{p}{:}\PY{l+m+mi}{10}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}xticks(y)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Frequency of chats on different times}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{invert\PYZus{}yaxis}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{WhatsappChatAnalyzer_Final_files/WhatsappChatAnalyzer_Final_58_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsection{Calculating number of messages per
+hour}\label{calculating-number-of-messages-per-hour}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{36}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{math}
+
+\PY{n}{a} \PY{o}{=} \PY{n}{Start\PYZus{}date} \PY{o}{+} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ }\PY{l+s+s1}{\PYZsq{}}\PY{o}{+}\PY{n}{Start\PYZus{}time}
+\PY{n}{b} \PY{o}{=} \PY{n}{End\PYZus{}date} \PY{o}{+} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ }\PY{l+s+s1}{\PYZsq{}}\PY{o}{+} \PY{n}{End\PYZus{}time}
+
+\PY{n}{start\PYZus{}hour} \PY{o}{=} \PY{n}{datetime}\PY{o}{.}\PY{n}{datetime}\PY{o}{.}\PY{n}{strptime}\PY{p}{(}\PY{n}{a}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s1}{/}\PY{l+s+s1}{\PYZpc{}}\PY{l+s+s1}{m/}\PY{l+s+s1}{\PYZpc{}}\PY{l+s+s1}{Y }\PY{l+s+s1}{\PYZpc{}}\PY{l+s+s1}{H:}\PY{l+s+s1}{\PYZpc{}}\PY{l+s+s1}{M}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{end\PYZus{}hour} \PY{o}{=} \PY{n}{datetime}\PY{o}{.}\PY{n}{datetime}\PY{o}{.}\PY{n}{strptime}\PY{p}{(}\PY{n}{b}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s1}{/}\PY{l+s+s1}{\PYZpc{}}\PY{l+s+s1}{m/}\PY{l+s+s1}{\PYZpc{}}\PY{l+s+s1}{Y }\PY{l+s+s1}{\PYZpc{}}\PY{l+s+s1}{H:}\PY{l+s+s1}{\PYZpc{}}\PY{l+s+s1}{M}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{n}{Diff} \PY{o}{=} \PY{n}{end\PYZus{}hour}\PY{o}{\PYZhy{}}\PY{n}{start\PYZus{}hour}
+\PY{n}{no\PYZus{}of\PYZus{}hours} \PY{o}{=} \PY{n}{Diff}\PY{o}{.}\PY{n}{seconds}\PY{o}{/}\PY{l+m+mi}{3600} \PY{o}{+} \PY{n}{Diff}\PY{o}{.}\PY{n}{days} \PY{o}{*}\PY{l+m+mi}{24}
+
+\PY{n}{no\PYZus{}of\PYZus{}days} \PY{o}{=} \PY{n}{math}\PY{o}{.}\PY{n}{ceil}\PY{p}{(}\PY{n}{no\PYZus{}of\PYZus{}hours}\PY{o}{/}\PY{l+m+mi}{24}\PY{p}{)}
+\PY{n}{no\PYZus{}of\PYZus{}days}
+
+\PY{n}{no\PYZus{}of\PYZus{}week} \PY{o}{=}\PY{n}{math}\PY{o}{.}\PY{n}{ceil}\PY{p}{(}\PY{n}{no\PYZus{}of\PYZus{}days}\PY{o}{/}\PY{l+m+mi}{7}\PY{p}{)}
+\PY{n}{no\PYZus{}of\PYZus{}week}
+
+\PY{n}{no\PYZus{}of\PYZus{}month} \PY{o}{=} \PY{p}{(}\PY{n}{end\PYZus{}hour}\PY{o}{.}\PY{n}{year} \PY{o}{\PYZhy{}} \PY{n}{start\PYZus{}hour}\PY{o}{.}\PY{n}{year}\PY{p}{)}\PY{o}{*}\PY{l+m+mi}{12} \PY{o}{+} \PY{p}{(}\PY{n}{end\PYZus{}hour}\PY{o}{.}\PY{n}{month} \PY{o}{\PYZhy{}} \PY{n}{start\PYZus{}hour}\PY{o}{.}\PY{n}{month}\PY{p}{)}
+\PY{n}{no\PYZus{}of\PYZus{}month}
+
+\PY{n}{no\PYZus{}of\PYZus{}year} \PY{o}{=} \PY{p}{(}\PY{n}{end\PYZus{}hour}\PY{o}{.}\PY{n}{year} \PY{o}{\PYZhy{}} \PY{n}{start\PYZus{}hour}\PY{o}{.}\PY{n}{year}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{37}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{msg\PYZus{}per\PYZus{}year} \PY{o}{=} \PY{n}{Total\PYZus{}msg} \PY{o}{/} \PY{n}{no\PYZus{}of\PYZus{}year}
+\PY{n}{msg\PYZus{}per\PYZus{}year}
+
+\PY{n}{msg\PYZus{}per\PYZus{}week} \PY{o}{=} \PY{n}{Total\PYZus{}msg}\PY{o}{/} \PY{n}{no\PYZus{}of\PYZus{}week}
+\PY{n}{msg\PYZus{}per\PYZus{}week}
+
+\PY{n}{msg\PYZus{}per\PYZus{}month} \PY{o}{=} \PY{n}{Total\PYZus{}msg}\PY{o}{/}\PY{n}{no\PYZus{}of\PYZus{}month}
+\PY{n}{msg\PYZus{}per\PYZus{}month}
+
+\PY{n}{msg\PYZus{}per\PYZus{}day} \PY{o}{=} \PY{n}{Total\PYZus{}msg} \PY{o}{/} \PY{n}{no\PYZus{}of\PYZus{}days}
+\PY{n}{msg\PYZus{}per\PYZus{}day}
+
+\PY{n}{msg\PYZus{}per\PYZus{}hour} \PY{o}{=} \PY{n}{Total\PYZus{}msg}\PY{o}{/}\PY{n}{no\PYZus{}of\PYZus{}hours}
+\PY{n}{msg\PYZus{}per\PYZus{}hour}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{37}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+3.7245849654915126
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{38}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{most\PYZus{}msg\PYZus{}by\PYZus{}user}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[4586, 6427, 6327, 8836, 5221, 3398, 2483, 2657]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{39}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{no\PYZus{}of\PYZus{}words}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[17503, 28338, 39070, 36937, 33773, 16652, 7786, 8296]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{40}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{tot\PYZus{}no\PYZus{}text}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[72396, 111142, 162532, 150429, 137660, 67933, 28819, 35124]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{41}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{avg\PYZus{}words}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[3.959954751131222, 4.790870667793745, 6.653610354223433, 4.400929345883474,
+8.613363937770977, 5.350899742930591, 3.3273504273504275, 3.373729158194388]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{42}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{no\PYZus{}of\PYZus{}media}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[166, 512, 455, 443, 1300, 286, 143, 198]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{43}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{no\PYZus{}of\PYZus{}emoji}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[2157, 4377, 2206, 3818, 2437, 5611, 2003, 1487]
+    \end{Verbatim}
+
+    \subsection{Testing}\label{testing}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{44}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} test\PYZus{}emoji = re.findall(r\PYZsq{}[\PYZca{}\PYZbs{}w\PYZbs{}s,.]\PYZsq{},chats\PYZus{}per\PYZus{}person\PYZus{}wo[0])}
+\PY{c+c1}{\PYZsh{} len(test\PYZus{}emoji)}
+\PY{n}{sum\PYZus{}test\PYZus{}emoji}\PY{o}{=}\PY{l+m+mi}{0}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{8}\PY{p}{)}\PY{p}{:}
+    \PY{n}{test\PYZus{}emoji} \PY{o}{=} \PY{n}{re}\PY{o}{.}\PY{n}{findall}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{[\PYZca{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{w}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{s,.]}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{chats\PYZus{}per\PYZus{}person\PYZus{}wo}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}
+    \PY{n}{sum\PYZus{}test\PYZus{}emoji} \PY{o}{+}\PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{test\PYZus{}emoji}\PY{p}{)}
+    
+\PY{n}{sum\PYZus{}test\PYZus{}emoji}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{44}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+35382
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{45}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{sum}\PY{o}{=}\PY{l+m+mi}{0}
+\PY{n}{sum1}\PY{o}{=}\PY{l+m+mi}{0}
+\PY{n}{sum2}\PY{o}{=}\PY{l+m+mi}{0}
+\PY{n}{sum3} \PY{o}{=} \PY{l+m+mi}{0}
+\PY{n}{sum4}\PY{o}{=}\PY{l+m+mi}{0}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{8}\PY{p}{)}\PY{p}{:}
+    \PY{n+nb}{sum} \PY{o}{+}\PY{o}{=} \PY{n}{most\PYZus{}msg\PYZus{}by\PYZus{}user}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+    \PY{n}{sum1} \PY{o}{+}\PY{o}{=} \PY{n}{tot\PYZus{}no\PYZus{}text}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+    \PY{n}{sum2} \PY{o}{+}\PY{o}{=} \PY{n}{no\PYZus{}of\PYZus{}media}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+    \PY{n}{sum3} \PY{o}{+}\PY{o}{=} \PY{n}{no\PYZus{}of\PYZus{}words}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+    \PY{n}{sum4} \PY{o}{+}\PY{o}{=} \PY{n}{no\PYZus{}of\PYZus{}emoji}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+    
+    
+\PY{c+c1}{\PYZsh{} sum}
+\PY{c+c1}{\PYZsh{} sum1}
+\PY{c+c1}{\PYZsh{} \PYZsh{} sum2}
+\PY{c+c1}{\PYZsh{} sum3}
+\PY{c+c1}{\PYZsh{} sum4}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Total messages: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n+nb}{sum}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Total no of letters: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{sum1}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Total files(media): }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{sum2}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Total words: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{sum3}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Total emojis: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{sum4}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Total messages:  39935
+Total no of letters:  766035
+Total files(media):  3503
+Total words:  188355
+Total emojis:  24096
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{46}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{no\PYZus{}of\PYZus{}emoji}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[2157, 4377, 2206, 3818, 2437, 5611, 2003, 1487]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{47}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{sum1}\PY{o}{+} \PY{n}{sum\PYZus{}test\PYZus{}emoji}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{47}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+801417
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{48}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{emoji}
+
+\PY{n}{no\PYZus{}of\PYZus{}emoji\PYZus{}w}\PY{o}{=}\PY{p}{[}\PY{p}{]}
+\PY{n}{emojis\PYZus{}iter\PYZus{}w} \PY{o}{=} \PY{n+nb}{map}\PY{p}{(}\PY{k}{lambda} \PY{n}{y}\PY{p}{:} \PY{n}{y}\PY{p}{,} \PY{n}{emoji}\PY{o}{.}\PY{n}{UNICODE\PYZus{}EMOJI}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{en}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{keys}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\PY{n}{regex\PYZus{}set} \PY{o}{=} \PY{n}{re}\PY{o}{.}\PY{n}{compile}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{|}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{join}\PY{p}{(}\PY{n}{re}\PY{o}{.}\PY{n}{escape}\PY{p}{(}\PY{n}{em}\PY{p}{)} \PY{k}{for} \PY{n}{em} \PY{o+ow}{in} \PY{n}{emojis\PYZus{}iter\PYZus{}w}\PY{p}{)}\PY{p}{)}
+
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+    \PY{n}{new\PYZus{}list} \PY{o}{=} \PY{n}{regex\PYZus{}set}\PY{o}{.}\PY{n}{findall}\PY{p}{(}\PY{n}{chats\PYZus{}per\PYZus{}person}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)} 
+    \PY{n}{new\PYZus{}list1} \PY{o}{=} \PY{n}{regex\PYZus{}set}\PY{o}{.}\PY{n}{findall}\PY{p}{(}\PY{n}{chats\PYZus{}per\PYZus{}person}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{)} 
+    \PY{n}{no\PYZus{}of\PYZus{}emoji\PYZus{}w}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{new\PYZus{}list}\PY{p}{)}\PY{p}{)}
+    
+\PY{n}{no\PYZus{}of\PYZus{}emoji\PYZus{}w}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{48}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+[2157, 4377, 2206, 3818, 2437, 5611, 2003, 1487]
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{49}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{s}\PY{o}{=}\PY{l+m+mi}{0}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{8}\PY{p}{)}\PY{p}{:}
+    \PY{n}{s}\PY{o}{+}\PY{o}{=}\PY{n}{no\PYZus{}of\PYZus{}emoji\PYZus{}w}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+\PY{n}{s}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{49}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+24096
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{50}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{df\PYZus{}wo\PYZus{}media}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Whatsapp Chats}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Users}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{==}\PY{n}{user\PYZus{}list}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{50}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+8        Iss mehangayi ke daur me ek unit se 20 obj vo {\ldots}
+15                                     Me bhi vahi bol rha
+21                        Chill janata curfew hai jao Todo
+25                              Chalo dosto apna to hogaya
+26                          Leaving through emergency exit
+                               {\ldots}
+36410                                                 nahi
+36411                                                   🤣🤣
+36413    nahi me kal register kela n ajj chi appointmen{\ldots}
+36423                                                    😂
+36428                                                  🤣🤣🤣
+Name: Whatsapp Chats, Length: 6111, dtype: object
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{51}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{new\PYZus{}list1}\PY{p}{[}\PY{l+m+mi}{2100}\PY{p}{:}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{51}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+['😂',
+ '👍',
+ '🏻',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '🙏',
+ '🏻',
+ '🙏',
+ '🏻',
+ '🙏',
+ '🏻',
+ '🙏',
+ '🏻',
+ '🙏',
+ '🏻',
+ '😍',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😆',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '🎵',
+ '🎶',
+ '🎶',
+ '🎶',
+ '🤔',
+ '😂',
+ '😂',
+ '😂',
+ '🤔',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '🔥',
+ '🔥',
+ '🔥',
+ '😂',
+ '🤔',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '🔥',
+ '🔥',
+ '🔥',
+ '🔥',
+ '🔥',
+ '🔥',
+ '🙈',
+ '🙈',
+ '🙈',
+ '🙈',
+ '🙈',
+ '🙈',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😂',
+ '😼',
+ '😂',
+ '😂']
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{52}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{no\PYZus{}of\PYZus{}words\PYZus{}w} \PY{o}{=}\PY{p}{[}\PY{p}{]}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+    \PY{n}{N\PYZus{}}\PY{o}{=} \PY{n}{chats\PYZus{}per\PYZus{}person}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ }\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{no\PYZus{}of\PYZus{}words\PYZus{}w}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{N\PYZus{}}\PY{p}{)}\PY{p}{)}
+    
+\PY{n}{no\PYZus{}of\PYZus{}words\PYZus{}w}
+
+\PY{n}{avg\PYZus{}} \PY{o}{=} \PY{n}{no\PYZus{}of\PYZus{}words\PYZus{}w}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{/}\PY{n}{most\PYZus{}msg\PYZus{}by\PYZus{}user}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+\PY{n}{avg\PYZus{}}
+\PY{n}{N\PYZus{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{52}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+['Athrya',
+ 'ko',
+ 'bhaga',
+ 'diya',
+ 'tum',
+ 'logon',
+ 'ne',
+ '😂😂😂😂',
+ 'Coronavirus',
+ 'death',
+ 'toll',
+ '+2',
+ '😂😂😂',
+ 'Sarang?',
+ 'Lon?',
+ '*kon',
+ 'Guys{\ldots}',
+ 'Contagion',
+ 'Yeh',
+ 'movie',
+ 'dekho',
+ 'Feels',
+ 'so',
+ 'real..',
+ 'Spread',
+ 'of',
+ 'a',
+ 'virus',
+ 'Online',
+ 'lecture',
+ 'karna',
+ 'hai',
+ 'kya?',
+ 'Aaj',
+ 'ka',
+ 'din',
+ 'karenge?',
+ 'Same{\ldots}',
+ 'Kuch',
+ 'nahi',
+ 'Corona',
+ 'chal',
+ 'raha',
+ 'hai',
+ '0',
+ 'Score',
+ 'kay',
+ 'ahe??',
+ '🤣🤣🤣🤣',
+ '😰',
+ '😂😂',
+ 'Chalo',
+ 'kuch',
+ 'karte',
+ 'hai..',
+ 'Nahi',
+ 're',
+ 'khana',
+ 'kha',
+ 'raha',
+ 'tha',
+ '😂😂',
+ '1',
+ 'lakh',
+ 'Mi',
+ 'nahi',
+ 'kela',
+ 're🙄',
+ 'What',
+ 'swades?',
+ 'Movie?',
+ 'Wow',
+ '<Media',
+ 'omitted>',
+ 'Ritya',
+ 'ke',
+ 'pass',
+ 'backup',
+ 'hai',
+ 'Mazyakade',
+ 'plot',
+ 'ahe',
+ 'Ani',
+ 'business',
+ 'takel',
+ 'Kyu',
+ 'dara',
+ 'raha',
+ 'hai?',
+ 'Ha{\ldots}',
+ 'Delhi',
+ 'bhi',
+ 'lockdown',
+ 'pe',
+ 'hai',
+ 'Kheti',
+ 'hai',
+ 'lekin',
+ 'paani',
+ 'nahi',
+ 'hai',
+ 'Karnataka',
+ 'Hai',
+ 're',
+ 'Ek',
+ 'do',
+ 'din',
+ 'mein',
+ 'pata',
+ 'chalega',
+ 'Sabka',
+ 'Testing',
+ 'chalu',
+ 'kiya',
+ 'hai',
+ 'na',
+ 'abhi?',
+ 'Exactly{\ldots}',
+ 'Question',
+ 'mark',
+ 'idhar',
+ 'hai',
+ 'Sanchar',
+ 'bandi',
+ 'mhanje',
+ 'kay?',
+ 'Mai',
+ 'abhi',
+ 'groceries',
+ 'lene',
+ 'gaya',
+ 'tha{\ldots}',
+ 'Sab',
+ 'jagah',
+ 'police..',
+ 'Muze',
+ 'bhi',
+ 'roka',
+ "He's",
+ 'weird..',
+ 'Ha',
+ 'Actually',
+ 'uske',
+ 'ghar',
+ 'ke',
+ 'bahar',
+ 'ka',
+ 'hi',
+ 'photo',
+ 'tha',
+ 'woh',
+ 'Mi',
+ 'pn',
+ 'tikdech',
+ 'rahto',
+ 'so',
+ 'mla',
+ 'mahitiye',
+ 'Yes..',
+ 'he',
+ 'should',
+ 'be',
+ 'at',
+ 'home{\ldots}',
+ 'My',
+ 'cousin',
+ 'in',
+ 'US',
+ 'went',
+ 'for',
+ 'a',
+ 'long',
+ 'walk',
+ 'today',
+ 'Government',
+ 'cancelled',
+ 'all',
+ 'interstate',
+ 'travel',
+ 'in',
+ 'delhi',
+ 'So',
+ 'many',
+ 'UPians',
+ 'were',
+ 'stuck',
+ 'in',
+ 'Delhi,',
+ 'Yeh',
+ 'maine',
+ 'ndtv',
+ 'pe',
+ 'Dekha',
+ 'Yeh',
+ 'ndtv',
+ 'pe',
+ 'Nidhi',
+ 'Razdan',
+ 'kab',
+ 'aati',
+ 'hai?',
+ 'Waiting',
+ 'for',
+ 'her',
+ 'Heard',
+ 'somewhere',
+ 'that',
+ 'Beed',
+ 'city',
+ 'had',
+ '26k',
+ 'punekars',
+ 'and',
+ 'mumbaikars',
+ 'coming',
+ 'in',
+ 'in',
+ 'last',
+ 'couple',
+ 'of',
+ 'days',
+ 'Hao',
+ 'na',
+ 'https://www.washingtonpost.com/health/2020/03/23/coronavirus-isnt-alive-thats-
+why-its-so-hard-kill/',
+ 'Maharashtra',
+ 'chi',
+ 'century',
+ 'zali',
+ '🎉',
+ 'India',
+ '506',
+ '😂',
+ 'Athrya',
+ 'having',
+ 'a',
+ 'meltdown',
+ 'All',
+ 'is',
+ 'well',
+ '<Media',
+ 'omitted>',
+ '<Media',
+ 'omitted>',
+ 'Olympics',
+ 'postponed',
+ 'by',
+ 'an',
+ 'year..!!!',
+ "They're",
+ 'not',
+ 'beating',
+ 'up',
+ 'anyone',
+ 'Good',
+ 'to',
+ 'know',
+ '😂😂😨',
+ "I've",
+ 'read',
+ 'somewhere',
+ 'on',
+ 'twitter',
+ 'that',
+ 'only',
+ '6\%',
+ 'of',
+ 'total',
+ 'cases',
+ 'are',
+ 'in',
+ 'countries',
+ 'where',
+ 'average',
+ 'temperature',
+ 'is',
+ 'greater',
+ 'than',
+ '18°C.',
+ 'Ho',
+ 'sakta',
+ 'hai',
+ 'Yeh',
+ 'Modi',
+ 'saala',
+ 'kitna',
+ 'slowly',
+ 'bolta',
+ 'hai{\ldots}',
+ 'Kab',
+ 'se',
+ 'baat',
+ 'kar',
+ 'raha',
+ 'hai',
+ 'ye{\ldots}',
+ '😂😂😂',
+ '🤦🏻\textbackslash{}u200d♂',
+ 'Woh',
+ 'kagaj',
+ 'hath',
+ 'mein',
+ 'rakh{\ldots}',
+ 'Police',
+ 'dikha',
+ 'ki',
+ 'kahaj',
+ 'dikhadena',
+ 'Nahitr',
+ 'he',
+ 'hoil{\ldots}😂',
+ 'Jau',
+ 'nako',
+ 'mg',
+ 'tu..',
+ 'Happy',
+ 'Gudi',
+ 'Padwa!',
+ '?????',
+ 'Tu',
+ 'baghitlis',
+ 'ka',
+ '??',
+ 'Tr',
+ 'baghun',
+ 'review',
+ 'sang..',
+ 'mh',
+ 'baghto',
+ 'mi',
+ 'Congrats',
+ 'athrya!!!',
+ 'Dekha',
+ 'maine',
+ 'bhi',
+ 'Kya',
+ 'hai',
+ 'nahi',
+ 'samjha',
+ 'https://www.theguardian.com/world/2020/mar/25/bolsonaro-brazil-wouldnt-feel-
+anything-covid-19-attack-state-lockdowns',
+ 'Brazilian',
+ 'president',
+ 'says',
+ 'he',
+ 'want',
+ 'to',
+ 'reopen',
+ 'schools',
+ 'because',
+ 'only',
+ 'elderly',
+ 'are',
+ 'affected..',
+ '🙄',
+ 'Ikde',
+ 'ala',
+ 'hota',
+ 'kal',
+ 'thoda',
+ 'paus..',
+ 'Tu',
+ 'gharich',
+ 'raha',
+ 'Societies',
+ 'lock',
+ 'kelet',
+ 'punyat',
+ 'asa',
+ 'aikla',
+ 'mi',
+ '😂😂',
+ '😂',
+ 'Ha',
+ 'Chalo',
+ 're',
+ 'Skype',
+ 'call',
+ 'karte',
+ 'hai',
+ '..',
+ 'So',
+ 'laptop',
+ 'varun',
+ 'Maza',
+ 'pn',
+ 'fog',
+ 'ahe',
+ 'Facetime',
+ '??',
+ '\textbackslash{}U0001f92a',
+ 'Skype',
+ 'na',
+ 'final?',
+ 'Download',
+ 'kar',
+ 'raha',
+ 'hu',
+ 'main{\ldots}',
+ 'Tu',
+ 'laptop',
+ 'pe',
+ 'kar{\ldots}',
+ 'Fog',
+ 'ayega',
+ 'Nahi',
+ 'toh',
+ 'Kunachya',
+ 'tari',
+ 'phone',
+ 'ghe',
+ 'na',
+ 'mg{\ldots}',
+ 'Aai',
+ 'papa',
+ 'etc',
+ 'Tula',
+ 'phone',
+ 'bhetla?',
+ 'Food',
+ 'morning',
+ 'sir',
+ 'Aiklay{\ldots}',
+ 'Bhari',
+ '👏🏻',
+ 'Joker',
+ 'was',
+ 'way',
+ 'ahead',
+ 'of',
+ 'his',
+ 'time..',
+ "What's",
+ 'it',
+ 'about?',
+ 'Uh',
+ 'huh',
+ '700',
+ 'cross',
+ '🎉',
+ '😆😆😂',
+ '🤦🏻\textbackslash{}u200d♂',
+ '<Media',
+ 'omitted>',
+ 'Sham',
+ 'ko',
+ '4-5',
+ 'baje',
+ 'you',
+ 'want',
+ 'a',
+ 'big',
+ 'house???',
+ 'Mi',
+ 'good',
+ 'wife',
+ 'choose',
+ 'kela',
+ 'hota😂',
+ '<Media',
+ 'omitted>',
+ 'Varies',
+ 'from',
+ 'person',
+ 'to',
+ 'person',
+ 'Boris',
+ 'Johnson',
+ 'has',
+ 'covid19',
+ '\textbackslash{}U0001f92f\textbackslash{}U0001f92f',
+ 'The',
+ 'the',
+ 'PM',
+ 'of',
+ 'UK.',
+ 'Old',
+ 'people',
+ 'are',
+ 'called',
+ 'boomers',
+ '😂',
+ 'Slang',
+ 'term',
+ 'Ha',
+ 'kon',
+ 'ahet',
+ 'te??',
+ 'Ha',
+ 'Mi',
+ 'dupari',
+ 'pathavla',
+ 'hota',
+ 'hech..',
+ '🤦🏻\textbackslash{}u200d♂',
+ '😆',
+ 'Dyanda',
+ '😍',
+ 'Aa',
+ 'dyanda',
+ 'la',
+ 'kahi',
+ 'nahi',
+ 'mhanaycha',
+ 'Tech',
+ 'te',
+ 'Downloading',
+ '22',
+ 'Iron',
+ 'Man?',
+ "I'm",
+ 'signing',
+ 'up',
+ 'now',
+ "I'm",
+ 'gauravwarad',
+ 'Ye',
+ 'kiski',
+ 'bate',
+ 'chal',
+ 'rahi',
+ 'hai?',
+ 'Doland',
+ 'who?',
+ 'Ye',
+ 'house',
+ 'party',
+ 'pe',
+ 'Kuch',
+ 'hai',
+ 'Tu',
+ 'download',
+ 'kela',
+ 'Ka?',
+ 'Good',
+ 'night',
+ 'then',
+ 'Yup',
+ 'Guys',
+ 'special',
+ 'ops',
+ 'mein',
+ 'kuch',
+ 'adult',
+ 'scene',
+ 'ya',
+ 'gaaliya',
+ 'hai',
+ 'kya?',
+ 'Papa',
+ 'baithe',
+ 'hai',
+ 'sath',
+ 'mein',
+ 'Toh',
+ 'akele',
+ 'mein',
+ 'dekhu',
+ 'na',
+ '😂😂',
+ 'Ha..',
+ 'last',
+ 'week',
+ 'cha',
+ 'ahe',
+ 'Abhi',
+ 'US',
+ 'ko',
+ 'dekho',
+ '1lakh',
+ 'Ajun',
+ 'pn',
+ 'complete',
+ 'lockdown',
+ 'nahiye',
+ 'tikde',
+ '😂😂😂😂',
+ 'Kal',
+ 'xi',
+ 'la',
+ 'call',
+ 'kelyanantar',
+ 'Coronavirus',
+ 'bolala',
+ 'Xi',
+ 'jimping',
+ 'Chinese',
+ 'pm',
+ 'Kahi',
+ 'pn',
+ 'Ka?',
+ '20',
+ 'trillion',
+ 'dollars',
+ 'chi',
+ 'economy',
+ 'tr',
+ 'ahe',
+ 'Ka',
+ 'tyanchi?',
+ 'Saale',
+ 'ko',
+ 'batman',
+ 'banana',
+ 'tha',
+ 'Muze',
+ 'laga',
+ 'barish',
+ 'chalu',
+ 'hai',
+ 'Me',
+ 'too',
+ "I'm",
+ 'watching',
+ 'with',
+ 'younger',
+ 'sister',
+ 'Woh',
+ 'Ganga',
+ 'ke',
+ 'bete',
+ 'Ka',
+ 'naam',
+ 'kya',
+ 'hai?',
+ '🤦🏻\textbackslash{}u200d♂',
+ '\textbackslash{}U0001f92f😨',
+ 'Baher',
+ 'nako',
+ 'jau',
+ 'atta',
+ 'Maharashtra',
+ '186',
+ 'Saam',
+ 'tv',
+ 'Ritya',
+ "we'll",
+ 'miss',
+ 'you',
+ '😂😂😂😂',
+ '<Media',
+ 'omitted>',
+ 'Chup',
+ 'ho',
+ 'jao',
+ 'aur',
+ 'TV',
+ 'pe',
+ 'ramayan',
+ 'dekho',
+ 'TV',
+ 'pe',
+ 'Dekh',
+ 'sabke',
+ 'sath..',
+ 'bachpan',
+ 'wali',
+ 'feeling',
+ 'aati',
+ 'hai',
+ 'Are',
+ 'peak',
+ 'in',
+ 'China',
+ 'aake',
+ 'gaya',
+ 'Baki',
+ 'sab',
+ 'countries',
+ 'mein',
+ 'abhi',
+ 'peak',
+ 'pe',
+ 'hai',
+ 'Sita',
+ 'is',
+ 'about',
+ 'to',
+ 'see',
+ 'Ram',
+ 'for',
+ 'the',
+ 'first',
+ 'time{\ldots}',
+ '😍',
+ 'Pura',
+ 'lockdown',
+ 'kiya',
+ 'tha',
+ 'Then',
+ 'go',
+ 'to',
+ 'China',
+ 'Ye',
+ 'kaunse',
+ 'news',
+ 'padta',
+ 'hai',
+ 're',
+ 'tu??',
+ 'Guys',
+ 'shaktiman',
+ '@',
+ '10',
+ 'pm',
+ 'Dd',
+ 'national',
+ 'Aaj',
+ 'se',
+ 'chalu',
+ 'hone',
+ 'wala',
+ 'hai',
+ 'And',
+ '1pm',
+ 'noon',
+ 'Ramayan',
+ 'bhi',
+ 'Want',
+ 'Ben',
+ '10',
+ 'Chahiye',
+ 'muze',
+ 'Shut',
+ 'up',
+ 'and',
+ 'watch',
+ 'ramayan',
+ '.',
+ '✋🏻',
+ 'Ramayan',
+ 'Dekho',
+ 're',
+ 'Ram',
+ 'sita',
+ 'ki',
+ 'shadi',
+ 'chalu',
+ 'hai',
+ 'Kitne',
+ 'mare?',
+ 'Kal',
+ '20',
+ 'hote',
+ 'na?????',
+ '😨',
+ 'Jalgaon',
+ 'che',
+ 'kiti',
+ '?',
+ 'Ha',
+ 'Kal',
+ 'pahli',
+ 'bar',
+ 'mile',
+ 'aur',
+ 'aaj',
+ 'shadi',
+ '😂😂😂😂😂',
+ 'Special',
+ 'ops',
+ 'ki',
+ 'ending',
+ 'nahi',
+ 'samjha',
+ 'mai..',
+ 'Unke',
+ 'paas',
+ 'bomb',
+ 'kyun',
+ 'nahi',
+ 'the?',
+ 'Oh',
+ 'bhai',
+ '😂😂',
+ 'Toh',
+ 'count',
+ 'bol',
+ 'de{\ldots}',
+ 'MH',
+ 'govt',
+ 'announced',
+ 'salary',
+ 'cuts',
+ 'for',
+ 'all',
+ 'government',
+ 'employees{\ldots}',
+ 'Teri',
+ 'shadi',
+ 'ke',
+ 'liye',
+ 'ladki',
+ 'Delhi',
+ 'thi',
+ 'Khatam',
+ 'hogaya',
+ 'ab',
+ 'Maharashtra',
+ '300',
+ 'Mumbai',
+ 'mein',
+ '59',
+ 'badhe',
+ 'Ritya',
+ 'jalgaon',
+ 'wala',
+ 'mela',
+ 'Mumbai',
+ '156',
+ '🤦🏻\textbackslash{}u200d♂🤦🏻\textbackslash{}u200d♂',
+ 'Latur',
+ 'mein',
+ 'nahi',
+ 'hai',
+ 'ab',
+ 'tak',
+ 'Ha',
+ 'Ritya',
+ 'baher',
+ 'ahe',
+ 'bahutek',
+ '..',
+ 'Lelo',
+ '<Media',
+ 'omitted>',
+ 'Ha',
+ '*legendary',
+ 'Hindi',
+ 'movies',
+ '😂',
+ 'Agar',
+ 'marne',
+ 'wala',
+ 'hoga',
+ 'toh',
+ 'bike',
+ 'muze',
+ 'dede',
+ 'yaar',
+ 'Chalega',
+ 'Usme',
+ '56',
+ 'Mumbai',
+ '\textbackslash{}U0001f92f',
+ 'Sir',
+ 'toh',
+ 'event',
+ '8',
+ 'march',
+ 'la',
+ 'hota',
+ 'Before',
+ 'lockdown',
+ 'and',
+ 'all',
+ 'https://www.ndtv.com/india-news/coronavirus-india-delhi-markaz-nizamuddin-
+mosque-sealed-after-7-covid-19-deaths-850-moved-out-for-qu-2203336',
+ 'https://www.ndtv.com/india-news/coronavirus-india-delhi-markaz-nizamuddin-
+mosque-sealed-after-7-covid-19-deaths-850-moved-out-for-qu-2203336',
+ 'Wapis',
+ 'tabhi',
+ 'aa',
+ 'gaye',
+ 'the',
+ '😂😂',
+ 'Wapis',
+ 'aa',
+ 'gaye',
+ '😂😂😂',
+ 'Ritya',
+ 'jaldi',
+ 'type',
+ 'kar',
+ 'Yeh',
+ 'toh',
+ 'sabko',
+ 'pata',
+ 'hai',
+ 'Nahi',
+ 'pata',
+ 'Nahi',
+ '😂😂😂😂😂',
+ 'Sampla',
+ 'Abhi',
+ 'ramayan',
+ 'shuru',
+ 'hua',
+ 'hai',
+ 'Laxman',
+ 'ne',
+ 'usko',
+ 'unke',
+ 'mummy',
+ 'ki',
+ 'dekhbhal',
+ 'karne',
+ 'ko',
+ 'bola',
+ 'Urmila',
+ 'ki',
+ 'jai',
+ '😆',
+ '<Media',
+ 'omitted>',
+ 'Aadat',
+ 'nahi',
+ 'hai',
+ 'use',
+ 'Raja',
+ 'ki',
+ 'beti',
+ 'hai',
+ 'na',
+ '😅',
+ 'Yeh',
+ 'sab',
+ 'log',
+ 'bhojpuri',
+ 'bol',
+ 'rahe',
+ 'hai',
+ '😂😂',
+ '@918668611629',
+ 'Ashu',
+ 'ko',
+ 'dikha',
+ 'inspiration',
+ 'milega',
+ 'Ho',
+ 'na',
+ '😂😂',
+ 'Sabka',
+ 'kitna',
+ 'ladla',
+ 'hai..',
+ '😂😂😂😂',
+ 'Kaun',
+ 'tha',
+ 'woh',
+ 'bacchha?',
+ '😭😭😭😭',
+ 'Spoilers',
+ '😠',
+ 'I',
+ 'know',
+ 'the',
+ 'story',
+ 'too{\ldots}',
+ 'Ad',
+ 'ko',
+ 'bhi',
+ 'abhi',
+ 'ana',
+ 'tha',
+ '😠',
+ 'Mere',
+ 'pass',
+ 'time',
+ 'dikhane',
+ 'wali',
+ 'ghadi',
+ 'hai',
+ 'Isko',
+ 'kaise',
+ 'pata',
+ 'chala',
+ 'Ramayan',
+ 'Mahabharat',
+ 'Shravan',
+ 'ki',
+ 'maaa',
+ '😭😭😭😭',
+ 'Abe',
+ 'woh',
+ 'mar',
+ 'gayi',
+ 'abhi',
+ '😭😭😭',
+ 'Shrap',
+ 'mil',
+ 'gaya',
+ 'Dashrath',
+ 'marega',
+ 'abhi',
+ '😭😭😭😭',
+ 'I',
+ "can't",
+ 'watch',
+ 'it😭😭',
+ '😂😂😂',
+ 'Me',
+ 'too',
+ '😭😭😭😭',
+ '\textbackslash{}U0001f92f',
+ 'Kal',
+ 'subah',
+ 'ke',
+ 'episode',
+ 'mein',
+ 'dikhega',
+ 'ab',
+ "I'm",
+ 'about',
+ {\ldots}]
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{53}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{tot\PYZus{}no\PYZus{}text\PYZus{}final} \PY{o}{=}\PY{p}{[}\PY{p}{]}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+    \PY{n}{only\PYZus{}text} \PY{o}{=} \PY{n}{re}\PY{o}{.}\PY{n}{sub}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{[\PYZca{}a\PYZhy{}zA\PYZhy{}Z0\PYZhy{}9]}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{chats\PYZus{}per\PYZus{}person}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}     l=only\PYZus{}text.split(\PYZsq{} \PYZsq{})}
+\PY{c+c1}{\PYZsh{}     while(\PYZdq{}\PYZdq{} in only\PYZus{}text):}
+\PY{c+c1}{\PYZsh{}         only\PYZus{}text.remove(\PYZdq{}\PYZdq{})}
+    \PY{n}{tot\PYZus{}no\PYZus{}text\PYZus{}final}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{only\PYZus{}text}\PY{p}{)}\PY{p}{)}
+    
+\PY{n}{tot\PYZus{}no\PYZus{}text\PYZus{}final}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{53}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+[74388, 117286, 167992, 155745, 153260, 71365, 30535, 37500]
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{54}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{q}\PY{o}{=}\PY{l+m+mi}{0}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{8}\PY{p}{)}\PY{p}{:}
+    \PY{n}{q}\PY{o}{+}\PY{o}{=}\PY{n}{tot\PYZus{}no\PYZus{}text\PYZus{}final}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+    
+\PY{n}{q}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{54}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+808071
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{55}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{df}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{55}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+             Date   Time            Users  \textbackslash{}
+0      21/03/2020  18:54      Vamshikiran
+1      21/03/2020  18:54      Rushikesh N
+2      21/03/2020  18:54      Vamshikiran
+3      21/03/2020  18:54      Vamshikiran
+4      21/03/2020  18:54      Rushikesh N
+{\ldots}           {\ldots}    {\ldots}              {\ldots}
+39930  10/06/2021  16:28  Atharva Puranik
+39931  11/06/2021  11:12           Rudviq
+39932  11/06/2021  11:24  Atharva Puranik
+39933  11/06/2021  12:44      Vamshikiran
+39934  11/06/2021  12:54     Gaurav Warad
+
+                                          Whatsapp Chats
+0                                                      ?
+1                                    Kiran bhai boleeyyy
+2                               Kya kuch samajh nhi aaya
+3                               context hi clear nhi hai
+4      Sarang ko bole kya ki write up ki jagah mcqs s{\ldots}
+{\ldots}                                                  {\ldots}
+39930                                    <Media omitted>
+39931                                    <Media omitted>
+39932                                                  🥳
+39933                                              Noice
+39934                                                  😲
+
+[39935 rows x 4 columns]
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \section{Graph testing}\label{graph-testing}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{56}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{fig}\PY{p}{,}\PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
+\PY{n}{y}\PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{most\PYZus{}msg\PYZus{}by\PYZus{}user}\PY{p}{)}
+\PY{n}{chk\PYZus{}index}\PY{o}{=} \PY{n}{y}\PY{p}{[}\PY{n}{y}\PY{o}{.}\PY{n}{argsort}\PY{p}{(}\PY{p}{)}\PY{p}{]}\PY{p}{[}\PY{p}{:}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+
+
+\PY{n}{pips}\PY{o}{=}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+    \PY{n}{pips}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{n}{user\PYZus{}list}\PY{p}{[}\PY{n}{y}\PY{o}{.}\PY{n}{argsort}\PY{p}{(}\PY{p}{)}\PY{p}{[}\PY{p}{:}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{]} 
+
+\PY{n}{y\PYZus{}pos} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}\PY{p}{)}
+
+\PY{n}{ax}\PY{o}{.}\PY{n}{barh}\PY{p}{(}\PY{n}{y\PYZus{}pos}\PY{p}{,}\PY{n}{chk\PYZus{}index}\PY{p}{,}\PY{n}{align} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}yticks}\PY{p}{(}\PY{n}{y\PYZus{}pos}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}yticklabels}\PY{p}{(}\PY{n}{pips}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}xticks(y)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Number of messages per person}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{invert\PYZus{}yaxis}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{WhatsappChatAnalyzer_Final_files/WhatsappChatAnalyzer_Final_85_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{57}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{fig}\PY{p}{,}\PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
+\PY{n}{y}\PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{tot\PYZus{}no\PYZus{}text}\PY{p}{)}
+\PY{n}{chk\PYZus{}index}\PY{o}{=} \PY{n}{y}\PY{p}{[}\PY{n}{y}\PY{o}{.}\PY{n}{argsort}\PY{p}{(}\PY{p}{)}\PY{p}{]}\PY{p}{[}\PY{p}{:}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+
+
+\PY{n}{pips}\PY{o}{=}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+    \PY{n}{pips}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{n}{user\PYZus{}list}\PY{p}{[}\PY{n}{y}\PY{o}{.}\PY{n}{argsort}\PY{p}{(}\PY{p}{)}\PY{p}{[}\PY{p}{:}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{]} 
+
+\PY{n}{y\PYZus{}pos} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}\PY{p}{)}
+
+\PY{n}{ax}\PY{o}{.}\PY{n}{barh}\PY{p}{(}\PY{n}{y\PYZus{}pos}\PY{p}{,}\PY{n}{chk\PYZus{}index}\PY{p}{,}\PY{n}{align} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}yticks}\PY{p}{(}\PY{n}{y\PYZus{}pos}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}yticklabels}\PY{p}{(}\PY{n}{pips}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}xticks(y)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Number of text per person}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{invert\PYZus{}yaxis}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{WhatsappChatAnalyzer_Final_files/WhatsappChatAnalyzer_Final_86_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{58}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{fig}\PY{p}{,}\PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
+\PY{n}{y}\PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{no\PYZus{}of\PYZus{}emoji}\PY{p}{)}
+\PY{n}{chk\PYZus{}index}\PY{o}{=} \PY{n}{y}\PY{p}{[}\PY{n}{y}\PY{o}{.}\PY{n}{argsort}\PY{p}{(}\PY{p}{)}\PY{p}{]}\PY{p}{[}\PY{p}{:}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+
+
+\PY{n}{pips}\PY{o}{=}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+    \PY{n}{pips}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{n}{user\PYZus{}list}\PY{p}{[}\PY{n}{y}\PY{o}{.}\PY{n}{argsort}\PY{p}{(}\PY{p}{)}\PY{p}{[}\PY{p}{:}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{]} 
+
+\PY{n}{y\PYZus{}pos} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}\PY{p}{)}
+
+\PY{n}{ax}\PY{o}{.}\PY{n}{barh}\PY{p}{(}\PY{n}{y\PYZus{}pos}\PY{p}{,}\PY{n}{chk\PYZus{}index}\PY{p}{,}\PY{n}{align} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}yticks}\PY{p}{(}\PY{n}{y\PYZus{}pos}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}yticklabels}\PY{p}{(}\PY{n}{pips}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}xticks(y)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Number of emojis per person}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{invert\PYZus{}yaxis}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{WhatsappChatAnalyzer_Final_files/WhatsappChatAnalyzer_Final_87_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{59}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{fig}\PY{p}{,}\PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
+\PY{n}{y}\PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{no\PYZus{}of\PYZus{}words}\PY{p}{)}
+\PY{n}{chk\PYZus{}index}\PY{o}{=} \PY{n}{y}\PY{p}{[}\PY{n}{y}\PY{o}{.}\PY{n}{argsort}\PY{p}{(}\PY{p}{)}\PY{p}{]}\PY{p}{[}\PY{p}{:}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+
+
+\PY{n}{pips}\PY{o}{=}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+    \PY{n}{pips}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{n}{user\PYZus{}list}\PY{p}{[}\PY{n}{y}\PY{o}{.}\PY{n}{argsort}\PY{p}{(}\PY{p}{)}\PY{p}{[}\PY{p}{:}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{]} 
+
+\PY{n}{y\PYZus{}pos} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}\PY{p}{)}
+
+\PY{n}{ax}\PY{o}{.}\PY{n}{barh}\PY{p}{(}\PY{n}{y\PYZus{}pos}\PY{p}{,}\PY{n}{chk\PYZus{}index}\PY{p}{,}\PY{n}{align} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}yticks}\PY{p}{(}\PY{n}{y\PYZus{}pos}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}yticklabels}\PY{p}{(}\PY{n}{pips}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}xticks(y)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Number of words per person}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{invert\PYZus{}yaxis}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{WhatsappChatAnalyzer_Final_files/WhatsappChatAnalyzer_Final_88_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{60}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{fig}\PY{p}{,}\PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
+\PY{n}{y}\PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{no\PYZus{}of\PYZus{}media}\PY{p}{)}
+\PY{n}{chk\PYZus{}index}\PY{o}{=} \PY{n}{y}\PY{p}{[}\PY{n}{y}\PY{o}{.}\PY{n}{argsort}\PY{p}{(}\PY{p}{)}\PY{p}{]}\PY{p}{[}\PY{p}{:}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+
+
+\PY{n}{pips}\PY{o}{=}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+    \PY{n}{pips}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{n}{user\PYZus{}list}\PY{p}{[}\PY{n}{y}\PY{o}{.}\PY{n}{argsort}\PY{p}{(}\PY{p}{)}\PY{p}{[}\PY{p}{:}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{]} 
+
+\PY{n}{y\PYZus{}pos} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}\PY{p}{)}
+
+\PY{n}{ax}\PY{o}{.}\PY{n}{barh}\PY{p}{(}\PY{n}{y\PYZus{}pos}\PY{p}{,}\PY{n}{chk\PYZus{}index}\PY{p}{,}\PY{n}{align} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}yticks}\PY{p}{(}\PY{n}{y\PYZus{}pos}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}yticklabels}\PY{p}{(}\PY{n}{pips}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}xticks(y)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Number of media per person}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{invert\PYZus{}yaxis}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{WhatsappChatAnalyzer_Final_files/WhatsappChatAnalyzer_Final_89_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{61}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{fig}\PY{p}{,}\PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
+\PY{n}{y}\PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{avg\PYZus{}words}\PY{p}{)}
+\PY{n}{chk\PYZus{}index}\PY{o}{=} \PY{n}{y}\PY{p}{[}\PY{n}{y}\PY{o}{.}\PY{n}{argsort}\PY{p}{(}\PY{p}{)}\PY{p}{]}\PY{p}{[}\PY{p}{:}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+
+
+\PY{n}{pips}\PY{o}{=}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+    \PY{n}{pips}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{n}{user\PYZus{}list}\PY{p}{[}\PY{n}{y}\PY{o}{.}\PY{n}{argsort}\PY{p}{(}\PY{p}{)}\PY{p}{[}\PY{p}{:}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{]} 
+
+\PY{n}{y\PYZus{}pos} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{user\PYZus{}list}\PY{p}{)}\PY{p}{)}
+
+\PY{n}{ax}\PY{o}{.}\PY{n}{barh}\PY{p}{(}\PY{n}{y\PYZus{}pos}\PY{p}{,}\PY{n}{chk\PYZus{}index}\PY{p}{,}\PY{n}{align} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}yticks}\PY{p}{(}\PY{n}{y\PYZus{}pos}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}yticklabels}\PY{p}{(}\PY{n}{pips}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} ax.set\PYZus{}xticks(y)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Number of words per message per person}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{invert\PYZus{}yaxis}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{WhatsappChatAnalyzer_Final_files/WhatsappChatAnalyzer_Final_90_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
